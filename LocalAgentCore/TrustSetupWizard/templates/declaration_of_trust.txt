@@ -1,0 +1,7 @@
+DECLARATION OF TRUST
+
+I, {settlor_name}, the undersigned, of {settlor_address}, hereby declare that I have set aside and hold in trust the following property:
+
+{trust_property}
+
+... (more details to be added later) ...
