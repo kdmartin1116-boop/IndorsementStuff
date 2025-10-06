@@ -101,7 +101,7 @@ class BillParser:
 
             # Clean and parse amount string based on common European vs US formats
             if ',' in amount_str and '.' in amount_str:
-                if amount_str.find(',') < amount_str.find('.')): # e.g., 1,234.56 (US format)
+                if amount_str.find(',') < amount_str.find('.'): # e.g., 1,234.56 (US format)
                     amount_str = amount_str.replace(',', '')
                 else: # e.g., 1.234,56 (European format)
                     amount_str = amount_str.replace('.', '').replace(',', '.')

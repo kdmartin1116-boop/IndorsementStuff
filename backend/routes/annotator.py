@@ -1,19 +1,32 @@
-from fastapi import APIRouter, Request, Body
-from pydantic import BaseModel
-import sys
 import os
+import sys
 
-# Add the logic directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'LocalAgentCore', 'InstrumentAnnotator')))
+from pydantic import BaseModel
 
-from parse_layout import parse_layout
-from tag_zones import tag_zones
-from suggest_endorsements import suggest_endorsements
+from fastapi import APIRouter
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "LocalAgentCore",
+            "InstrumentAnnotator",
+        )
+    )
+)
+
+from parse_layout import parse_layout  # noqa: E402
+from suggest_endorsements import suggest_endorsements  # noqa: E402
+from tag_zones import tag_zones  # noqa: E402
 
 router = APIRouter()
 
+
 class AnnotatorRequest(BaseModel):
     text: str
+
 
 @router.post("/api/wizard/annotate")
 async def annotate_instrument(request: AnnotatorRequest):
@@ -23,9 +36,5 @@ async def annotate_instrument(request: AnnotatorRequest):
     layout = parse_layout(request.text)
     tags = tag_zones(layout)
     endorsements = suggest_endorsements(tags)
-    
-    return {
-        "layout": layout,
-        "tags": tags,
-        "endorsements": endorsements
-    }
+
+    return {"layout": layout, "tags": tags, "endorsements": endorsements}
