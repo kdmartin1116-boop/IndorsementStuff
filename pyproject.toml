@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "autotender-sovereign"
+version = "0.1.0"
+description = "A sovereign's toolkit for document analysis and tender generation."
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "*"
+pypdf = "*"
+reportlab = "*"
+pytesseract = "*"
+Pillow = "*"
+PyYAML = "*"
+pdf2image = "*"
+layoutparser = "*"
+torch = "*"
+torchvision = "*"
+transformers = "*"
+deepdoctection = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+flake8 = "*"
+pre-commit = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
