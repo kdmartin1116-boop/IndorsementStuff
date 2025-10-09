@@ -4,6 +4,7 @@ import FinancialHealth from './components/FinancialHealth';
 import LegalKnowledge from './components/LegalKnowledge';
 import Sovereignty from './components/Sovereignty';
 import StateNationalStatus from './components/StateNationalStatus';
+import Endorser from './components/Endorser';
 import './App.css';
 
 function App(): JSX.Element {
@@ -24,6 +25,9 @@ function App(): JSX.Element {
                 </div>
                 <div id="status-correction" title="State National Status">
                     <StateNationalStatus />
+                </div>
+                <div id="endorse-bill" title="Endorse Bill">
+                    <Endorser />
                 </div>
             </Tabs>
         </div>

@@ -7,6 +7,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
+from backend.routes import endorsement
 
 
 
@@ -28,6 +29,7 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 app = FastAPI()
+app.include_router(endorsement.router, prefix="/api", tags=["endorsement"])
 
 
 def allowed_file(filename: str) -> bool:

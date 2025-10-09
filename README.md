@@ -48,7 +48,13 @@ This project is a monorepo containing the following components:
     npm install
     ```
 
-4.  **Setup Pre-Commit Hooks:**
+4.  **Generate Private Key:**
+    From the project root directory, run the following command to generate a private key for signing endorsements. This is only required once.
+    ```bash
+    poetry run python scripts/generate_key.py
+    ```
+
+5.  **Setup Pre-Commit Hooks:**
     From the project root directory, install the git hooks to automatically lint and format your code before committing.
     ```bash
     poetry run pre-commit install

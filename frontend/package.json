@@ -13,11 +13,9 @@
     "generate:api": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output ./src/api --client axios"
   },
   "dependencies": {
-    "express": "^5.1.0",
     "pdfjs-dist": "^5.4.149",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sqlite3": "^5.1.7",
     "vite-plugin-static-copy": "^3.1.2"
   },
   "devDependencies": {
