@@ -1,9 +1,16 @@
 import { useState, useEffect } from 'react';
 
+interface Document {
+  stored_filename: string;
+  original_filename: string;
+  doc_type: string;
+  date_added: string;
+}
+
 function DocumentList() {
-  const [documents, setDocuments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchDocuments = async () => {
     setLoading(true);
@@ -19,7 +26,7 @@ function DocumentList() {
       } else {
         setError(data.message);
       }
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message);
     } finally {
       setLoading(false);
@@ -30,11 +37,11 @@ function DocumentList() {
     fetchDocuments();
   }, []);
 
-  const handleDownload = (filename) => {
+  const handleDownload = (filename: string) => {
     window.open(`/api/documents/${filename}`, '_blank');
   };
 
-  const handleDelete = async (filename) => {
+  const handleDelete = async (filename: string) => {
     if (window.confirm(`Are you sure you want to delete ${filename}?`)) {
       try {
         const response = await fetch(`/api/documents/${filename}`, {
@@ -46,12 +53,11 @@ function DocumentList() {
         }
         const data = await response.json();
         if (data.success) {
-          // alert('Document deleted successfully!'); // Removed alert
           fetchDocuments(); // Refresh the list
         } else {
           setError(data.message || 'An unknown error occurred during deletion.');
         }
-      } catch (e) {
+      } catch (e: any) {
         setError(`Error deleting document: ${e.message}`);
       }
     }

@@ -6,7 +6,7 @@ import Sovereignty from './components/Sovereignty';
 import StateNationalStatus from './components/StateNationalStatus';
 import './App.css';
 
-function App() {
+function App(): JSX.Element {
     return (
         <div className="container">
             <header>

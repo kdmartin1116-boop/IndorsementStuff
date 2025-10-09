@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 
-const FinancialHealth = () => {
-    const [income, setIncome] = useState('');
-    const [expenses, setExpenses] = useState('');
-    const [result, setResult] = useState('');
+const FinancialHealth: React.FC = () => {
+    const [income, setIncome] = useState<string>('');
+    const [expenses, setExpenses] = useState<string>('');
+    const [result, setResult] = useState<string>('');
 
     const calculateBudget = () => {
         if (income && expenses) {
@@ -16,6 +16,14 @@ const FinancialHealth = () => {
         } else {
             setResult('<p>Please enter both your income and expenses.</p>');
         }
+    };
+
+    const handleIncomeChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setIncome(e.target.value);
+    };
+
+    const handleExpensesChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setExpenses(e.target.value);
     };
 
     return (
@@ -65,11 +73,11 @@ const FinancialHealth = () => {
             <div className="calculator">
                 <div className="form-group">
                     <label htmlFor="income">Monthly Income:</label>
-                    <input type="number" id="income" placeholder="Enter your monthly income" value={income} onChange={(e) => setIncome(e.target.value)} />
+                    <input type="number" id="income" placeholder="Enter your monthly income" value={income} onChange={handleIncomeChange} />
                 </div>
                 <div className="form-group">
                     <label htmlFor="expenses">Monthly Expenses:</label>
-                    <input type="number" id="expenses" placeholder="Enter your total monthly expenses" value={expenses} onChange={(e) => setExpenses(e.target.value)} />
+                    <input type="number" id="expenses" placeholder="Enter your total monthly expenses" value={expenses} onChange={handleExpensesChange} />
                 </div>
                 <button onClick={calculateBudget}>Calculate</button>
                 <div id="result" dangerouslySetInnerHTML={{ __html: result }}></div>

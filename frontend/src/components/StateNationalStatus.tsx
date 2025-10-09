@@ -1,6 +1,6 @@
 import React from 'react';
 
-const StateNationalStatus = () => {
+const StateNationalStatus: React.FC = () => {
     return (
         <>
             <h2>State National Status: A Comprehensive Overview</h2>

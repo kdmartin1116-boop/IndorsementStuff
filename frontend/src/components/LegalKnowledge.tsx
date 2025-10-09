@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 
-const LegalKnowledge = () => {
-    const [openSection, setOpenSection] = useState(null);
+type Section = 'rights' | 'mistakes' | 'glossary';
 
-    const toggleSection = (section) => {
+const LegalKnowledge: React.FC = () => {
+    const [openSection, setOpenSection] = useState<Section | null>(null);
+
+    const toggleSection = (section: Section) => {
         setOpenSection(openSection === section ? null : section);
     };
 

@@ -1,15 +1,19 @@
+import { useState, ChangeEvent } from 'react';
 
-
-import { useState } from 'react';
+interface BillData {
+  [key: string]: string;
+}
 
 function Dashboard() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [billData, setBillData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [billData, setBillData] = useState<BillData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
   const handleParseBill = async () => {
@@ -38,7 +42,7 @@ function Dashboard() {
       } else {
         setError(data.error || 'An unknown error occurred.');
       }
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message || 'Network error occurred.');
     } finally {
       setLoading(false);

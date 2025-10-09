@@ -9,7 +9,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 --ignore-pattern \"dist/*\" && prettier --check .",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "generate:api": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output ./src/api --client axios"
   },
   "dependencies": {
     "express": "^5.1.0",
@@ -20,6 +21,7 @@
     "vite-plugin-static-copy": "^3.1.2"
   },
   "devDependencies": {
+    "openapi-typescript-codegen": "^0.29.0",
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.27.1",
     "@testing-library/jest-dom": "^6.9.1",

@@ -13,59 +13,92 @@ This project aims to provide a starting point for United States citizens who are
 This project is a monorepo containing the following components:
 
 *   `frontend/`: A React-based web application that provides the user interface.
-*   `backend/`: A Python-based backend that provides the API for the frontend.
-*   `LocalAgentCore/`: A Python library containing the core business logic of the application.
-*   `sovereign-financial-cockpit-old/`: The previous version of this project.
+*   `backend/`: A Python-based API server built with FastAPI.
+*   `packages/`: A collection of shared Python packages containing the core business logic.
+    *   `packages/LocalAgentCore`: Contains modules for document analysis, contradiction detection, and instrument generation.
+    *   `packages/AutoTender`: Contains modules for automated tendering processes.
+*   `docs/`: Contains educational and informational documents.
 
 ## Getting Started
 
 ### Prerequisites
 
 *   [Node.js](https://nodejs.org/en/) (v18 or later)
-*   [Python](https://www.python.org/downloads/) (v3.10 or later)
+*   [Python](https://www.python.org/downloads/) (v3.9 or later)
+*   [Poetry](https://python-poetry.org/docs/#installation) for Python package management.
 
-### Backend Setup
+### Installation
 
-1.  Navigate to the `backend` directory:
+1.  **Clone the repository:**
     ```bash
-    cd backend
-    ```
-2.  Create a virtual environment:
-    ```bash
-    python -m venv .venv
-    ```
-3.  Activate the virtual environment:
-    *   On macOS and Linux:
-        ```bash
-        source .venv/bin/activate
-        ```
-    *   On Windows:
-        ```bash
-        .venv\Scripts\activate
-        ```
-4.  Install the dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-5.  Run the backend server:
-    ```bash
-    uvicorn main:app --reload
+    git clone <repository-url>
+    cd <repository-name>
     ```
 
-### Frontend Setup
+2.  **Install Backend Dependencies:**
+    From the project root directory, install the Python dependencies using Poetry.
+    ```bash
+    poetry install
+    ```
 
-1.  Navigate to the `frontend` directory:
+3.  **Install Frontend Dependencies:**
+    Navigate to the `frontend` directory and use `npm`.
     ```bash
     cd frontend
-    ```
-2.  Install the dependencies:
-    ```bash
     npm install
     ```
-3.  Run the frontend development server:
+
+4.  **Setup Pre-Commit Hooks:**
+    From the project root directory, install the git hooks to automatically lint and format your code before committing.
     ```bash
-    npm run dev
+    poetry run pre-commit install
     ```
+
+## Development
+
+To run the application, you will need to run the backend and frontend servers in separate terminals.
+
+### Running the Backend
+
+From the project root directory, run the following command to start the FastAPI server:
+```bash
+poetry run uvicorn backend.main:app --reload
+```
+The API will be available at `http://127.0.0.1:8000`.
+
+### Running the Frontend
+
+Navigate to the `frontend` directory and run the development server:
+```bash
+cd frontend
+npm run dev
+```
+The web application will be available at `http://localhost:5173` (or another port if 5173 is in use).
+
+## Available Scripts
+
+### Backend (from root directory)
+
+*   **Run tests:**
+    ```bash
+    poetry run pytest
+    ```
+*   **Check for linting errors:**
+    ```bash
+    poetry run flake8 backend packages
+    ```
+*   **Apply formatting:**
+    ```bash
+    poetry run black backend packages
+    ```
+
+### Frontend (from `frontend/` directory)
+
+*   **Start development server:** `npm run dev`
+*   **Create a production build:** `npm run build`
+*   **Run tests:** `npm run test`
+*   **Check for linting errors:** `npm run lint`
+*   **Apply formatting:** `npm run format`
 
 ## Security
 

@@ -1,12 +1,14 @@
 import os
 import sys
 import uuid
+from typing import Tuple, Optional
 
-from flask import Flask, jsonify, request, send_file
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.responses import FileResponse
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 
 from packages.LocalAgentCore.InstrumentAnnotator.parser import BillParser  # noqa: E402
 from packages.LocalAgentCore.InstrumentAnnotator.stamper import (
@@ -19,22 +21,21 @@ from packages.LocalAgentCore.RemedyCompiler.engine import (
     apply_endorsement,
 )  # noqa: E402
 
-# --- Basic Flask App Setup ---
+# --- Basic FastAPI App Setup ---
 UPLOAD_FOLDER = "/tmp/uploads"
 ALLOWED_EXTENSIONS = {"pdf"}
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app = FastAPI()
 
 
-def allowed_file(filename):
+def allowed_file(filename: str) -> bool:
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 # --- Main Workflow ---
-def process_instrument(file_path):
+def process_instrument(file_path: str) -> Tuple[Optional[str], Optional[str]]:
     """
     Orchestrates the OCR -> Parse -> Generate -> Stamp workflow.
     """
@@ -66,7 +67,7 @@ def process_instrument(file_path):
 
     # 4. Stamp: Apply the endorsement to the PDF
     output_filename = f"processed_{os.path.basename(file_path)}"
-    output_path = os.path.join(app.config["UPLOAD_FOLDER"], output_filename)
+    output_path = os.path.join(UPLOAD_FOLDER, output_filename)
 
     attach_endorsement_to_pdf_function(
         original_pdf_path=file_path,
@@ -80,110 +81,84 @@ def process_instrument(file_path):
     return output_path, None
 
 
-# --- Flask API Endpoint ---
-@app.route("/")
+# --- FastAPI API Endpoints ---
+@app.get("/")
 def index():
-    return "Hello, World!"
+    return {"message": "Hello, World!"}
 
 
-@app.route("/upload", methods=["POST"])
-def upload_file():
-    if "file" not in request.files:
-        return "No file part", 400
-    file = request.files["file"]
+@app.post("/upload")
+def upload_file_endpoint(file: UploadFile = File(...)):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file part")
     if file.filename == "":
-        return "No selected file", 400
+        raise HTTPException(status_code=400, detail="No selected file")
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        file.save(file_path)
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        with open(file_path, "wb") as buffer:
+            buffer.write(file.file.read())
 
         processed_path, error = process_instrument(file_path)
 
         if error:
-            return f"An error occurred: {error}", 500
+            raise HTTPException(status_code=500, detail=f"An error occurred: {error}")
 
-        return send_file(processed_path, as_attachment=True)
+        return FileResponse(processed_path, media_type='application/pdf', filename=os.path.basename(processed_path))
+
+    raise HTTPException(status_code=400, detail="File type not allowed")
 
 
-@app.route("/scan-contract", methods=["POST"])
-def scan_contract():
-    if "contract" not in request.files:
-        return jsonify({"error": "No file part"}), 400
-    file = request.files["contract"]
-    if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
-    if not allowed_file(file.filename):
-        return (
-            jsonify({"error": "Unsupported file type. Only PDF files are allowed."}),
-            400,
-        )
+@app.post("/scan-contract")
+def scan_contract_endpoint(contract: UploadFile = File(...)):
+    if not contract:
+        raise HTTPException(status_code=400, detail="No file part")
+    if contract.filename == "":
+        raise HTTPException(status_code=400, detail="No selected file")
+    if not allowed_file(contract.filename):
+        raise HTTPException(status_code=400, detail="Unsupported file type. Only PDF files are allowed.")
 
-    filename = secure_filename(file.filename)
+    filename = secure_filename(contract.filename)
     unique_filename = str(uuid.uuid4()) + os.path.splitext(filename)[1]
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
-    file.save(filepath)
+    filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+    with open(filepath, "wb") as buffer:
+        buffer.write(contract.file.read())
 
-    # tag = request.form["tag"]
-    # result = subprocess.run(
-    #     [
-    #         "bash",
-    #         "clausescanner.sh",
-    #         f"--contract={filepath}",
-    #         f"--tags={tag}",
-    #     ],
-    #     capture_output=True,
-    #     text=True,
-    # )
-    # return jsonify({"output": result.stdout})
-    return jsonify({"output": "clausescanner.sh not found"})
+    # Placeholder for clause scanner logic
+    return {"output": "clausescanner.sh not found"}
 
 
-@app.route("/parse-sovereign-instrument", methods=["POST"])
-def parse_sovereign_instrument_endpoint():
-    if "document" not in request.files:
-        return jsonify({"error": "No document part"}), 400
+@app.post("/parse-sovereign-instrument")
+def parse_sovereign_instrument_endpoint(document: UploadFile = File(...)):
+    if not document:
+        raise HTTPException(status_code=400, detail="No document part")
+    if document.filename == "":
+        raise HTTPException(status_code=400, detail="No selected file")
 
-    file = request.files["document"]
-    if file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
-
-    uploads_dir = app.config["UPLOAD_FOLDER"]
-    os.makedirs(uploads_dir, exist_ok=True)
     unique_filename = str(uuid.uuid4()) + "_sovereign_doc.pdf"
-    filepath = os.path.join(uploads_dir, unique_filename)
-    file.save(filepath)
+    filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
+    with open(filepath, "wb") as buffer:
+        buffer.write(document.file.read())
 
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             document_content = f.read()
 
         results = parse_sovereign_instrument(document_content)
-        return jsonify(results)
+        return results
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         if os.path.exists(filepath):
             os.remove(filepath)
 
 
-@app.route("/generate-remedy", methods=["POST"])
-def generate_remedy():
-    # violation = request.form["violation"]
-    # jurisdiction = request.form["jurisdiction"]
-    # result = subprocess.run(
-    #     [
-    #         "bash",
-    #         "remedygenerator.sh",
-    #         f"--violation={violation}",
-    #         f"--jurisdiction={jurisdiction}",
-    #     ],
-    #     capture_output=True,
-    #     text=True,
-    # )
-    # return jsonify({"output": result.stdout})
-    return jsonify({"output": "remedygenerator.sh not found"})
+@app.post("/generate-remedy")
+def generate_remedy_endpoint():
+    # Placeholder for remedy generation logic
+    return {"output": "remedygenerator.sh not found"}
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

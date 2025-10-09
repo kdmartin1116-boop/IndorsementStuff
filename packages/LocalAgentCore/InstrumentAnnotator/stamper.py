@@ -3,10 +3,11 @@ from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from io import BytesIO
+from typing import Dict, Any, Tuple
 
-def attach_endorsement_to_pdf_function(original_pdf_path, endorsement_data, output_pdf_path, ink_color, page_index):
+def attach_endorsement_to_pdf_function(original_pdf_path: str, endorsement_data: Dict[str, Any], output_pdf_path: str, ink_color: str, page_index: int) -> bool:
     # Define color map
-    color_map = {
+    color_map: Dict[str, Tuple[float, float, float]] = {
         "black": (0, 0, 0),
         "red": (1, 0, 0),
         "blue": (0, 0, 1),
@@ -25,7 +26,7 @@ def attach_endorsement_to_pdf_function(original_pdf_path, endorsement_data, outp
 
         can.setFont("Helvetica", 10)
         can.setFillColorRGB(r, g, b) # Set color
-        y = 730
+        y: float = 730
         for i, e in enumerate(endorsement_data.get("endorsements", []), start=1):
             can.drawString(50, y, f"{i}. {e.get('endorser_name', 'N/A')} → {e.get('next_payee', 'N/A')}")
             y -= 15
@@ -72,7 +73,7 @@ def attach_endorsement_to_pdf_function(original_pdf_path, endorsement_data, outp
         print(f"❌ Error attaching endorsement to PDF: {e}")
         return False # Indicate failure
 
-def stamp_pdf_with_endorsement(original_pdf_path, output_pdf_path, x, y, endorsement_text, qualifier):
+def stamp_pdf_with_endorsement(original_pdf_path: str, output_pdf_path: str, x: float, y: float, endorsement_text: str, qualifier: str) -> bool:
     try:
         # Create an overlay with the endorsement text at the specified coordinates
         packet = BytesIO()

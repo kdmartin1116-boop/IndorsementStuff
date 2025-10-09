@@ -1,25 +1,27 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 
 // Hardcoding KEYWORD_MAP for now, as there's no API to fetch it.
 // In a real application, this would ideally be fetched from the backend.
-const KEYWORD_MAP_FRONTEND = {
+const KEYWORD_MAP_FRONTEND: { [key: string]: string[] } = {
   "hidden_fee": ["convenience fee", "service charge", "processing fee", "undisclosed", "surcharge"],
   "misrepresentation": ["misrepresented", "misleading", "deceptive", "false statement", "inaccurate"],
   "arbitration": ["arbitration", "arbitrator", "binding arbitration", "waive your right to"]
 };
 
 function ContractScanner() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [selectedTag, setSelectedTag] = useState(Object.keys(KEYWORD_MAP_FRONTEND)[0]);
-  const [scanResult, setScanResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string>(Object.keys(KEYWORD_MAP_FRONTEND)[0]);
+  const [scanResult, setScanResult] = useState<string[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
-  const handleTagChange = (event) => {
+  const handleTagChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedTag(event.target.value);
   };
 
@@ -56,10 +58,9 @@ function ContractScanner() {
       if (data.found_clauses) {
         setScanResult(data.found_clauses);
       } else {
-        // This case might be for a successful response but no clauses found, or an unexpected structure
         setScanResult([]);
       }
-    } catch (e) {
+    } catch (e: any) {
       setError(e.message || 'Network error occurred.');
     } finally {
       setLoading(false);

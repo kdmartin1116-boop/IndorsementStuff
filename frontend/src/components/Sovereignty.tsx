@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sovereignty = () => {
+const Sovereignty: React.FC = () => {
     return (
         <>
             <h2>The "Strawman" Theory and Asserting Sovereignty</h2>
