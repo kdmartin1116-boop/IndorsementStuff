@@ -105,6 +105,12 @@ async def endorse_bill(file: UploadFile = File(...)):
             output_pdf_name = f"endorsed_{filename.replace('.pdf', '')}_{trigger.replace(' ', '')}.pdf"
             endorsed_output_path = os.path.join(UPLOAD_DIR, output_pdf_name)
 
+            print(f"🔍 DEBUG - Endorsement data being attached:")
+            print(f"   Endorsements: {bill_for_logging.get('endorsements')}")
+            print(f"   Signature block: {bill_for_logging.get('signature_block')}")
+            print(f"   Trigger: {trigger}")
+            print(f"   Ink color: {endorsement_type.get('ink_color', 'black')}")
+
             attach_endorsement_to_pdf_function(
                 original_pdf_path=filepath,
                 endorsement_data=bill_for_logging,

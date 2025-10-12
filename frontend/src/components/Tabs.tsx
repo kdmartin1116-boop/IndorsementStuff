@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, Children } from 'react';
+import React, { useState, ReactElement, Children, useEffect } from 'react';
 
 interface TabPaneProps {
     id: string;
@@ -11,7 +11,16 @@ interface TabsProps {
 }
 
 const Tabs: React.FC<TabsProps> = ({ children }) => {
-    const [activeTab, setActiveTab] = useState(children[0].props.id);
+    // Persist active tab in localStorage to prevent resets
+    const [activeTab, setActiveTab] = useState(() => {
+        const savedTab = localStorage.getItem('activeTab');
+        return savedTab || children[0].props.id;
+    });
+
+    // Save active tab to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('activeTab', activeTab);
+    }, [activeTab]);
 
     return (
         <div className="tab-container">

@@ -14,14 +14,16 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/scan-contract': 'http://127.0.0.1:8000',
-      '/endorse-bill': 'http://127.0.0.1:8000',
-      '/stamp_endorsement': 'http://127.0.0.1:8000',
-      '/generate-tender-letter': 'http://127.0.0.1:8000',
-      '/generate-ptp-letter': 'http://127.0.0.1:8000',
-      '/get-bill-data': 'http://127.0.0.1:8000',
-      '/scan-for-terms': 'http://127.0.0.1:8000',
-      '/generate-remedy': 'http://127.0.0.1:8000'
+      '/api': 'http://127.0.0.1:8002',
+      '/uploads': 'http://127.0.0.1:8002',
+      '/scan-contract': 'http://127.0.0.1:8002',
+      '/endorse-bill': 'http://127.0.0.1:8002',
+      '/stamp_endorsement': 'http://127.0.0.1:8002',
+      '/generate-tender-letter': 'http://127.0.0.1:8002',
+      '/generate-ptp-letter': 'http://127.0.0.1:8002',
+      '/get-bill-data': 'http://127.0.0.1:8002',
+      '/scan-for-terms': 'http://127.0.0.1:8002',
+      '/generate-remedy': 'http://127.0.0.1:8002'
     }
   },
   build: {

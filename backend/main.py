@@ -3,7 +3,13 @@ import sys
 import uuid
 from typing import Tuple, Optional
 
+# Add the project root to Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
@@ -29,7 +35,47 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(endorsement.router, prefix="/api", tags=["endorsement"])
+
+# Serve uploaded and endorsed files
+@app.get("/uploads/{filename}")
+async def serve_file(filename: str):
+    """Serve files from the uploads directory"""
+    file_path = os.path.join("uploads", filename)
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename=filename)
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
+
+
+@app.get("/positioner")
+async def interactive_positioner():
+    """Serve the interactive endorsement positioner tool"""
+    from fastapi.responses import HTMLResponse
+    try:
+        with open("interactive_positioner.html", "r", encoding="utf-8") as f:
+            return HTMLResponse(f.read())
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Positioner tool not found")
+
+@app.get("/favicon.ico")
+async def favicon():
+    """Serve favicon.ico or return 204 No Content if not available."""
+    from fastapi import Response
+    favicon_path = os.path.join("static", "favicon.ico")
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path, media_type="image/x-icon")
+    return Response(status_code=204)
 
 
 def allowed_file(filename: str) -> bool:
