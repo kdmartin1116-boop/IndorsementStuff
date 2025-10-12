@@ -14,19 +14,23 @@ from fastapi.responses import FileResponse
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
 from backend.routes import endorsement
+from backend.routes import auth
 
 
 
-from packages.LocalAgentCore.InstrumentAnnotator.parser import BillParser  # noqa: E402
-from packages.LocalAgentCore.InstrumentAnnotator.stamper import (
-    attach_endorsement_to_pdf_function,  # noqa: E402
-)
-from packages.LocalAgentCore.InstrumentClassifier.classifier import (
-    parse_sovereign_instrument,  # noqa: E402
-)
-from packages.LocalAgentCore.RemedyCompiler.engine import (
-    apply_endorsement,
-)  # noqa: E402
+# DANGEROUS PACKAGES REMOVED FOR LEGAL SAFETY
+# The following imports have been removed because they referenced packages
+# containing dangerous pseudolegal theories that could result in criminal charges:
+#
+# from packages.LocalAgentCore.InstrumentAnnotator.parser import BillParser
+# from packages.LocalAgentCore.InstrumentAnnotator.stamper import attach_endorsement_to_pdf_function
+# from packages.LocalAgentCore.InstrumentClassifier.classifier import parse_sovereign_instrument  
+# from packages.LocalAgentCore.RemedyCompiler.engine import apply_endorsement
+#
+# These packages promoted sovereign citizen theories that:
+# - Are not recognized by any court
+# - Could constitute document fraud
+# - May result in criminal charges for users
 
 # --- Basic FastAPI App Setup ---
 UPLOAD_FOLDER = "/tmp/uploads"
@@ -46,27 +50,55 @@ app.add_middleware(
 )
 
 app.include_router(endorsement.router, prefix="/api", tags=["endorsement"])
+app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 
 # Serve uploaded and endorsed files
 @app.get("/uploads/{filename}")
 async def serve_file(filename: str):
-    """Serve files from the uploads directory"""
-    file_path = os.path.join("uploads", filename)
-    if os.path.exists(file_path):
-        return FileResponse(file_path, filename=filename)
-    else:
-        raise HTTPException(status_code=404, detail="File not found")
+    """
+    DISABLED: File serving disabled for security
+    
+    This endpoint has been disabled as part of security improvements.
+    """
+    raise HTTPException(
+        status_code=423,  # Locked
+        detail="File serving disabled for security reasons. This application has been made safe for educational purposes only."
+    )
+    
+    # ORIGINAL CODE COMMENTED FOR SECURITY
+    # """Serve files from the uploads directory"""
+    # file_path = os.path.join("uploads", filename)
+    # if os.path.exists(file_path):
+    #     return FileResponse(file_path, filename=filename)
+    # else:
+    #     raise HTTPException(status_code=404, detail="File not found")
 
 
 @app.get("/positioner")
 async def interactive_positioner():
-    """Serve the interactive endorsement positioner tool"""
-    from fastapi.responses import HTMLResponse
-    try:
-        with open("interactive_positioner.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(f.read())
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Positioner tool not found")
+    """
+    DISABLED: Interactive positioner disabled for legal safety
+    
+    This tool was designed to help position UCC endorsements on documents,
+    which could constitute document fraud. It has been disabled for user safety.
+    """
+    raise HTTPException(
+        status_code=423,  # Locked
+        detail={
+            "error": "POSITIONER_DISABLED",
+            "message": "The interactive positioner tool has been disabled for legal safety. Document modification tools could constitute fraud.",
+            "legal_advice": "Please consult with a licensed attorney for legitimate legal assistance."
+        }
+    )
+    
+    # ORIGINAL CODE COMMENTED FOR SAFETY
+    # """Serve the interactive endorsement positioner tool"""
+    # from fastapi.responses import HTMLResponse
+    # try:
+    #     with open("interactive_positioner.html", "r", encoding="utf-8") as f:
+    #         return HTMLResponse(f.read())
+    # except FileNotFoundError:
+    #     raise HTTPException(status_code=404, detail="Positioner tool not found")
 
 @app.get("/favicon.ico")
 async def favicon():
@@ -102,31 +134,32 @@ def process_instrument(file_path: str) -> Tuple[Optional[str], Optional[str]]:
         print(f"Error during text extraction: {e}")
         return None, str(e)
 
-    # 2. Parse: Use BillParser to get structured data
-    parser = BillParser()
-    bill_data = parser.parse_bill(raw_text)
-    bill_data["recipient"] = "Daddy"
-    print(f"Parsed Bill Data: {bill_data}")
-
-    # 3. Generate: Create the endorsement
-    remedy_text = "Conditional Acceptance for Value - UCC 1-308"
-    endorsed_bill = apply_endorsement(bill_data, "draft", remedy_text)
-    print(f"Generated Endorsement: {endorsed_bill['endorsements']}")
-
-    # 4. Stamp: Apply the endorsement to the PDF
-    output_filename = f"processed_{os.path.basename(file_path)}"
-    output_path = os.path.join(UPLOAD_FOLDER, output_filename)
-
-    attach_endorsement_to_pdf_function(
-        original_pdf_path=file_path,
-        endorsement_data=endorsed_bill,
-        output_pdf_path=output_path,
-        ink_color="blue",
-        page_index=0,  # Stamp on the first page
-    )
-
-    print(f"Stamped PDF created at: {output_path}")
-    return output_path, None
+    # DANGEROUS FUNCTIONALITY REMOVED FOR LEGAL SAFETY
+    # The following dangerous operations have been disabled:
+    # - Bill parsing with pseudolegal theories
+    # - Endorsement generation using UCC theories  
+    # - PDF stamping/modification
+    # These could constitute document fraud and result in criminal charges.
+    
+    raise Exception("""
+    🚨 DOCUMENT PROCESSING DISABLED FOR LEGAL SAFETY 🚨
+    
+    This document processing functionality has been disabled because it could:
+    - Constitute document fraud
+    - Result in criminal charges for users
+    - Create documents not recognized by courts
+    
+    For legitimate legal assistance, please consult with a licensed attorney.
+    """)
+    
+    # ORIGINAL DANGEROUS CODE COMMENTED OUT:
+    # parser = BillParser()
+    # bill_data = parser.parse_bill(raw_text)  
+    # remedy_text = "Conditional Acceptance for Value - UCC 1-308"
+    # endorsed_bill = apply_endorsement(bill_data, "draft", remedy_text)
+    # attach_endorsement_to_pdf_function(...)
+    
+    # return None, "Functionality disabled for user safety"
 
 
 # --- FastAPI API Endpoints ---
@@ -192,8 +225,12 @@ def parse_sovereign_instrument_endpoint(document: UploadFile = File(...)):
         with open(filepath, "r", encoding="utf-8") as f:
             document_content = f.read()
 
-        results = parse_sovereign_instrument(document_content)
-        return results
+        # DANGEROUS FUNCTION REMOVED FOR SAFETY
+        # parse_sovereign_instrument promoted pseudolegal theories
+        raise HTTPException(
+            status_code=423, 
+            detail="Sovereign instrument parsing disabled for legal safety. These theories are not recognized by courts and could result in criminal charges."
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:

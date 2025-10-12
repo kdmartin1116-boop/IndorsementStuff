@@ -1,3 +1,0 @@
-NOTICE OF FILING
-
-This document, with packet ID {packet_id}, was filed at {location} on {timestamp}.

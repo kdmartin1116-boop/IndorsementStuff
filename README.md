@@ -1,85 +1,114 @@
-# Sovereign Financial Cockpit
+# Legal Education & Consumer Rights Resource Center
 
-## Disclaimer
+## 🚨 IMPORTANT SAFETY NOTICE 🚨
 
-**This repository is for educational and informational purposes only. The information provided here does not constitute legal advice. The process of changing your legal status is complex and has significant legal and financial implications. We strongly recommend that you consult with a qualified legal professional to discuss your specific situation and to ensure you are in compliance with all applicable laws and regulations.**
+**This application has been completely redesigned for legal safety. The original version promoted dangerous pseudolegal theories that could result in criminal charges. All harmful functionality has been removed and replaced with legitimate legal education resources.**
 
-## Project Goal
+## New Mission Statement
 
-This project aims to provide a starting point for United States citizens who are interested in understanding the process of correcting their status to that of a State National. We provide educational resources and a collaborative space for sharing information.
+This project now serves as a **legitimate legal education platform** that provides:
+- **Factual information** about consumer rights and protections
+- **Real legal resources** recognized by courts and government agencies  
+- **Warnings** about dangerous pseudolegal theories
+- **Guidance** on finding qualified legal representation
+
+**We explicitly reject and warn against "sovereign citizen" and related pseudolegal theories.**
+
+## What Changed
+
+**Original Version (DANGEROUS)**:
+- Promoted "sovereign citizen" and "state national" theories
+- Included tools for document modification and "UCC endorsements"
+- Could have resulted in criminal charges for users
+
+**New Version (SAFE)**:
+- Legitimate consumer rights education
+- Real legal resources and referrals
+- Warnings about pseudolegal dangers
+- All document modification tools removed
 
 ## Project Structure
 
-This project is a monorepo containing the following components:
+This educational platform contains:
 
-*   `frontend/`: A React-based web application that provides the user interface.
-*   `backend/`: A Python-based API server built with FastAPI.
-*   `packages/`: A collection of shared Python packages containing the core business logic.
-    *   `packages/LocalAgentCore`: Contains modules for document analysis, contradiction detection, and instrument generation.
-    *   `packages/AutoTender`: Contains modules for automated tendering processes.
-*   `docs/`: Contains educational and informational documents.
+*   `frontend/`: React-based web application with legitimate legal education content
+*   `backend/`: Python/FastAPI server (dangerous functionality disabled)
+*   `docs/`: Educational documents about real legal processes and consumer rights
+*   `LEGITIMATE_LEGAL_INFO.md`: Comprehensive guide to real legal resources
+*   `SECURITY.md`: Security measures implemented for user safety
 
-## Getting Started
+## Educational Resources Available
+
+### Consumer Rights Information
+- **Fair Debt Collection Practices Act (FDCPA)** - Real protections against abusive collectors
+- **Fair Credit Reporting Act (FCRA)** - Your rights regarding credit reports
+- **Truth in Lending Act (TILA)** - Understanding loan terms and your rights
+- **State consumer protection laws** - Additional protections by state
+
+### Legal Help Resources
+- **How to find qualified attorneys** - State bar associations and referral services
+- **Legal aid organizations** - Free legal help for eligible individuals
+- **Court self-help resources** - Proper legal procedures and forms
+- **Understanding legal costs** - Fee arrangements and ways to reduce costs
+
+### Pseudolegal Warnings
+- **Why sovereign citizen theories don't work** - Court cases and legal consequences
+- **Real case examples** - People who faced criminal charges for these theories
+- **How to get legitimate help** - Proper legal channels that actually work
+
+## Running the Educational Platform (Optional)
+
+**Note: The platform can be viewed as static content without running servers.**
+
+If you want to run the web interface:
 
 ### Prerequisites
-
-*   [Node.js](https://nodejs.org/en/) (v18 or later)
-*   [Python](https://www.python.org/downloads/) (v3.9 or later)
-*   [Poetry](https://python-poetry.org/docs/#installation) for Python package management.
+*   [Node.js](https://nodejs.org/en/) (v18 or later) - for frontend only
+*   [Python](https://www.python.org/downloads/) (v3.9 or later) - optional, backend disabled
 
 ### Installation
-
-1.  **Clone the repository:**
+1.  **Frontend Only (Recommended):**
     ```bash
-    git clone <repository-url>
-    cd <repository-name>
+    cd frontend
+    npm install
+    npm run dev
     ```
 
-2.  **Install Backend Dependencies:**
-    From the project root directory, install the Python dependencies using Poetry.
+2.  **Full Installation (Backend Disabled):**
     ```bash
+    # Backend dependencies (dangerous functionality removed)
     poetry install
-    ```
-
-3.  **Install Frontend Dependencies:**
-    Navigate to the `frontend` directory and use `npm`.
-    ```bash
+    
+    # Frontend
     cd frontend
     npm install
     ```
 
-4.  **Generate Private Key:**
-    From the project root directory, run the following command to generate a private key for signing endorsements. This is only required once.
-    ```bash
-    poetry run python scripts/generate_key.py
-    ```
+## Development (For Educational Improvements)
 
-5.  **Setup Pre-Commit Hooks:**
-    From the project root directory, install the git hooks to automatically lint and format your code before committing.
-    ```bash
-    poetry run pre-commit install
-    ```
+**Important: All document processing and pseudolegal functionality has been disabled.**
 
-## Development
-
-To run the application, you will need to run the backend and frontend servers in separate terminals.
-
-### Running the Backend
-
-From the project root directory, run the following command to start the FastAPI server:
-```bash
-poetry run uvicorn backend.main:app --reload
-```
-The API will be available at `http://127.0.0.1:8000`.
-
-### Running the Frontend
-
-Navigate to the `frontend` directory and run the development server:
+### Running Frontend Only (Safe)
 ```bash
 cd frontend
 npm run dev
 ```
-The web application will be available at `http://localhost:5173` (or another port if 5173 is in use).
+The educational platform will be available at `http://localhost:5173`
+
+### Backend Status
+The backend exists but all dangerous functionality has been disabled:
+- Document processing returns safety warnings
+- File upload endpoints return error messages  
+- All UCC/sovereign citizen tools removed
+- Serves as example of what NOT to build
+
+### Development Guidelines
+If contributing to this educational platform:
+1. **Only add legitimate legal information**
+2. **Include proper disclaimers** about consulting real attorneys
+3. **Never add document processing tools**
+4. **Verify all legal information** with qualified sources
+5. **Include warnings** about pseudolegal theories
 
 ## Available Scripts
 
@@ -106,15 +135,49 @@ The web application will be available at `http://localhost:5173` (or another por
 *   **Check for linting errors:** `npm run lint`
 *   **Apply formatting:** `npm run format`
 
-## Security
+## Security Measures Implemented
 
-This project deals with sensitive information, so it's important to follow security best practices. Here are some recommendations:
+This platform has been secured to prevent harm to users:
 
-*   **Environment Variables:** Use a `.env` file to store sensitive information like API keys and secrets. The `.gitignore` file is already configured to ignore `.env` files.
-*   **Input Sanitization:** The backend uses `secure_filename` to sanitize filenames. The `BillParser` uses regular expressions to extract data from uploaded files. While this is relatively safe, it's always a good practice to validate and sanitize all user inputs to prevent injection attacks.
-*   **Authentication and Authorization:** The current version of the application does not have any authentication or authorization. If you plan to add user accounts or other sensitive features, you should implement a robust authentication and authorization system.
-*   **Dependencies:** Keep your dependencies up to date to avoid known vulnerabilities. You can use tools like `pip-audit` for Python and `npm audit` for Node.js to check for vulnerabilities in your dependencies.
+### Dangerous Functionality Removed
+- **Document processing tools** - Could constitute fraud
+- **PDF modification/stamping** - Could alter legal documents illegally
+- **UCC endorsement generators** - Based on false legal theories
+- **Cryptographic signing** - For fraudulent document creation
+- **File upload processing** - To prevent misuse
 
-## Contributing
+### Safety Features Added  
+- **Comprehensive legal warnings** throughout the interface
+- **Error messages** directing users to legitimate resources
+- **Disabled endpoints** with explanatory safety messages
+- **Educational content** about why pseudolegal theories don't work
 
-We welcome contributions to this project. Please read our `CODE_OF_CONDUCT.md` before contributing.
+### For Legitimate Legal Help
+- **Licensed attorney referrals** - State bar associations
+- **Legal aid organizations** - Free help for eligible individuals
+- **Consumer protection agencies** - Real government resources
+- **Proper legal procedures** - Court-recognized processes
+
+## Contributing Guidelines
+
+**We welcome contributions that enhance legitimate legal education:**
+
+### ✅ Contributions We Want
+- Accurate information about real consumer rights
+- Links to legitimate legal resources
+- Improvements to warnings about pseudolegal dangers
+- Better explanations of proper legal procedures
+
+### ❌ Contributions We Reject
+- Any pseudolegal theories or sovereign citizen content
+- Document processing or modification tools
+- UCC redemption or similar false theories
+- Tools that could be used for document fraud
+
+### Requirements for Contributors
+1. **Verify all legal information** with authoritative sources
+2. **Include proper disclaimers** about consulting real attorneys  
+3. **No document processing functionality**
+4. **Focus on legitimate, court-recognized legal processes**
+
+Please read our `CODE_OF_CONDUCT.md` before contributing.

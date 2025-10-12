@@ -1,8 +1,0 @@
-FROM:
-{full_name}
-c/o 123 Main Street
-Anytown, USA
-
-TO:
-{recipient}
-{location}

@@ -13,6 +13,12 @@ const Endorser: React.FC = () => {
     };
 
     const handleSubmit = async () => {
+        // DISABLED FOR LEGAL SAFETY
+        setError('🚨 ENDORSEMENT FUNCTIONALITY DISABLED FOR LEGAL SAFETY 🚨\n\nThis feature has been disabled because:\n• UCC endorsement theories are not recognized by courts\n• Using this could constitute document fraud\n• It may result in criminal charges\n\nFor legitimate legal advice, please consult with a licensed attorney.\n\nLegal Resources:\n• American Bar Association: https://www.americanbar.org/\n• Legal Services Corporation: https://www.lsc.gov/find-legal-aid/\n• FindLaw: https://www.findlaw.com/find-a-lawyer/');
+        return;
+        
+        // ORIGINAL CODE COMMENTED FOR SAFETY
+        /*
         if (!file) {
             setError('Please select a file to endorse.');
             return;
@@ -50,6 +56,7 @@ const Endorser: React.FC = () => {
         } finally {
             setIsProcessing(false);
         }
+        */
     };
 
     return (

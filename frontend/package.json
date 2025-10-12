@@ -1,7 +1,7 @@
 {
-  "name": "sovereign-finance-cockpit",
+  "name": "legal-education-platform",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -38,13 +38,12 @@
     "prettier": "^3.6.2",
     "vite": "^6.3.5"
   },
-  "description": "## **Disclaimer**",
-  "main": "script.js",
+  "description": "Educational platform for legitimate legal consumer rights education. All dangerous pseudolegal functionality has been removed for user safety.",
+  "main": "main.tsx",
   "directories": {
-    "doc": "docs",
-    "test": "tests"
+    "doc": "docs"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["legal-education", "consumer-rights", "legal-resources", "education"],
+  "author": "Legal Education Contributors",
   "license": "ISC"
 }

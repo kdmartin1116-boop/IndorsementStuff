@@ -3,12 +3,18 @@ import os
 import uuid
 from fastapi import APIRouter, File, UploadFile, HTTPException
 
-from packages.EndorserKit.bill_parser import BillParser
-from packages.EndorserKit.endorsement_engine import prepare_endorsement_for_signing
-from packages.EndorserKit.ucc3_endorsements import sign_endorsement
-from packages.EndorserKit.remedy_logger import log_remedy
-from packages.EndorserKit.attach_endorsement_to_pdf import attach_endorsement_to_pdf_function
-from packages.EndorserKit.utils import load_yaml_config
+# DANGEROUS PACKAGES REMOVED FOR LEGAL SAFETY
+# The following imports have been removed because they referenced the EndorserKit package
+# which contained dangerous tools for document endorsement that could constitute fraud:
+#
+# from packages.EndorserKit.bill_parser import BillParser
+# from packages.EndorserKit.endorsement_engine import prepare_endorsement_for_signing  
+# from packages.EndorserKit.ucc3_endorsements import sign_endorsement
+# from packages.EndorserKit.remedy_logger import log_remedy
+# from packages.EndorserKit.attach_endorsement_to_pdf import attach_endorsement_to_pdf_function
+# from packages.EndorserKit.utils import load_yaml_config
+#
+# These tools promoted UCC endorsement theories that could result in criminal charges.
 
 router = APIRouter()
 
@@ -31,12 +37,37 @@ def get_private_key():
 
 @router.post("/endorse-bill/")
 async def endorse_bill(file: UploadFile = File(...)):
-    private_key_pem = get_private_key()
-    if not private_key_pem:
-        raise HTTPException(
-            status_code=500, 
-            detail=f"Server is not configured with a private key. Please run 'python scripts/generate_key.py' or set the PRIVATE_KEY_PEM environment variable."
-        )
+    """
+    DISABLED FOR LEGAL SAFETY
+    
+    This endpoint has been disabled because the UCC endorsement functionality:
+    1. Is not recognized by any court in the United States
+    2. Could constitute document fraud
+    3. May result in criminal charges for users
+    4. Has been consistently rejected by courts
+    
+    For legitimate legal advice, consult with a licensed attorney.
+    """
+    raise HTTPException(
+        status_code=423,  # Locked
+        detail={
+            "error": "ENDPOINT_DISABLED_FOR_LEGAL_SAFETY",
+            "message": "This document endorsement functionality has been disabled for user safety. The UCC endorsement theories are not recognized by courts and could result in criminal charges. Please consult with a licensed attorney for legitimate legal advice.",
+            "legal_resources": [
+                "https://www.americanbar.org/groups/legal_services/flh-home/flh-free-legal-help/",
+                "https://www.lsc.gov/find-legal-aid",
+                "https://www.findlaw.com/find-a-lawyer/"
+            ]
+        }
+    )
+    
+    # ORIGINAL CODE COMMENTED OUT FOR SAFETY
+    # private_key_pem = get_private_key()
+    # if not private_key_pem:
+    #     raise HTTPException(
+    #         status_code=500, 
+    #         detail=f"Server is not configured with a private key. Please run 'python scripts/generate_key.py' or set the PRIVATE_KEY_PEM environment variable."
+    #     )
 
     # Ensure upload directory exists
     os.makedirs(UPLOAD_DIR, exist_ok=True)

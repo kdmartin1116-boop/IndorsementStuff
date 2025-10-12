@@ -1,7 +1,0 @@
-TRUST AGREEMENT
-
-This Trust Agreement is made this {date} day of {month}, {year}, by and between {settlor_name} (the 'Settlor') and {trustee_name} (the 'Trustee').
-
-The Settlor desires to create a trust to hold certain assets for the benefit of the Beneficiaries named herein.
-
-... (more details to be added later) ...
