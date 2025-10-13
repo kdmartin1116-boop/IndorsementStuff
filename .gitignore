@@ -10,6 +10,9 @@ lerna-debug.log*
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 *.so
 .Python
 build/
@@ -29,6 +32,8 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
 
 # PyInstaller
 *.manifest
@@ -73,6 +78,11 @@ build/
 *.swp
 *.swo
 *~
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # OS generated files
 .DS_Store
@@ -133,7 +143,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -146,16 +155,6 @@ public
 # Temporary folders
 tmp/
 temp/
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 
 # Local database files
 *.db
@@ -179,6 +178,7 @@ temp/
 # Upload directories
 uploads/
 static/uploads/
+/tmp/uploads/
 
 # Docker
 Dockerfile*

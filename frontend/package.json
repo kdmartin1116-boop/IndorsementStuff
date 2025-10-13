@@ -1,0 +1,50 @@
+{
+  "name": "sovereign-finance-cockpit",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 --ignore-pattern \"dist/*\" && prettier --check .",
+    "format": "prettier --write .",
+    "preview": "vite preview",
+    "test": "jest",
+    "generate:api": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output ./src/api --client axios"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^5.4.149",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vite-plugin-static-copy": "^3.1.2"
+  },
+  "devDependencies": {
+    "openapi-typescript-codegen": "^0.29.0",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "babel-jest": "^30.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "prettier": "^3.6.2",
+    "vite": "^6.3.5"
+  },
+  "description": "## **Disclaimer**",
+  "main": "script.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

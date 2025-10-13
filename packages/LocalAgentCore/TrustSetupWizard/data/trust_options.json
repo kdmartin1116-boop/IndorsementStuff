@@ -1,0 +1,12 @@
+{
+    "private_express_trust": {
+        "name": "Private Express Trust",
+        "description": "A trust created by the express intention of the settlor. It is used for asset protection and to avoid probate.",
+        "requirements": ["Settlor", "Trustee", "Beneficiary", "Trust Property"]
+    },
+    "common_law_trust": {
+        "name": "Common Law Trust",
+        "description": "A trust created under common law, often used for business purposes and to hold assets.",
+        "requirements": ["Trustee", "Beneficiary", "Trust Corpus"]
+    }
+}

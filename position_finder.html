@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Endorsement Position Finder</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #canvas { border: 2px solid #333; cursor: crosshair; }
+        .info { margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 5px; }
+        .coordinates { font-weight: bold; color: #d00; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h2>📍 Endorsement Position Finder</h2>
+    <p>1. Load your PDF below<br>2. Click exactly where you want the endorsement box<br>3. Copy the coordinates and I'll update the code</p>
+    
+    <input type="file" id="pdfFile" accept=".pdf" />
+    <br><br>
+    
+    <canvas id="canvas" width="800" height="600"></canvas>
+    
+    <div class="info">
+        <div>📊 <strong>Click Coordinates:</strong> <span class="coordinates" id="coords">Click on the PDF to get coordinates</span></div>
+        <div>📏 <strong>PDF Dimensions:</strong> <span id="dimensions">Load PDF to see dimensions</span></div>
+        <div>🎯 <strong>For Code:</strong> <span class="coordinates" id="forCode">box_x = ?, box_y = ?</span></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let pdfDoc = null;
+        let scale = 1;
+        let pdfWidth = 0, pdfHeight = 0;
+
+        document.getElementById('pdfFile').addEventListener('change', loadPDF);
+        canvas.addEventListener('click', getCoordinates);
+
+        async function loadPDF(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const arrayBuffer = await file.arrayBuffer();
+            pdfDoc = await pdfjsLib.getDocument(arrayBuffer).promise;
+            
+            const page = await pdfDoc.getPage(1);
+            const viewport = page.getViewport({ scale: 1 });
+            
+            // Calculate scale to fit canvas
+            scale = Math.min(canvas.width / viewport.width, canvas.height / viewport.height);
+            const scaledViewport = page.getViewport({ scale });
+            
+            pdfWidth = viewport.width;
+            pdfHeight = viewport.height;
+            
+            // Clear canvas and render PDF
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: scaledViewport
+            };
+            
+            await page.render(renderContext).promise;
+            
+            document.getElementById('dimensions').textContent = 
+                `PDF: ${pdfWidth.toFixed(1)} x ${pdfHeight.toFixed(1)} points`;
+        }
+
+        function getCoordinates(event) {
+            if (!pdfDoc) {
+                alert('Please load a PDF first!');
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / scale;
+            const y = pdfHeight - ((event.clientY - rect.top) / scale); // PDF Y is bottom-up
+            
+            document.getElementById('coords').textContent = 
+                `X: ${x.toFixed(1)}, Y: ${y.toFixed(1)}`;
+            
+            document.getElementById('forCode').textContent = 
+                `box_x = ${Math.round(x)}, box_y = ${Math.round(y)}`;
+                
+            // Draw a red dot where clicked
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(event.clientX - rect.left, event.clientY - rect.top, 5, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+    </script>
+</body>
+</html>
