@@ -5,21 +5,9 @@ from pydantic import BaseModel
 
 from fastapi import APIRouter
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "LocalAgentCore",
-            "InstrumentAnnotator",
-        )
-    )
-)
-
-from parse_layout import parse_layout  # noqa: E402
-from suggest_endorsements import suggest_endorsements  # noqa: E402
-from tag_zones import tag_zones  # noqa: E402
+from packages.LocalAgentCore.InstrumentAnnotator.parse_layout import parse_layout
+from packages.LocalAgentCore.InstrumentAnnotator.suggest_endorsements import suggest_endorsements
+from packages.LocalAgentCore.InstrumentAnnotator.tag_zones import tag_zones
 
 router = APIRouter()
 

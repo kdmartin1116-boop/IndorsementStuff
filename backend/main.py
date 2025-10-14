@@ -13,9 +13,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pypdf import PdfReader
 from werkzeug.utils import secure_filename
-from backend.routes import endorsement
-
-
+from backend.routes import (
+    endorsement,
+    annotator,
+    discharge,
+    document_routes,
+    generator_routes,
+    hello,
+    nationality,
+    packet,
+)
+from backend.config.config import Config
 
 from packages.LocalAgentCore.InstrumentAnnotator.parser import BillParser  # noqa: E402
 from packages.LocalAgentCore.InstrumentAnnotator.stamper import (
@@ -34,7 +42,12 @@ ALLOWED_EXTENSIONS = {"pdf"}
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
-app = FastAPI()
+config = Config()
+app = FastAPI(
+    title="Enhanced Endorsement API",
+    description="Comprehensive API for sovereign financial instruments and bill discharge processes",
+    version="2.0.0",
+)
 
 # Add CORS middleware
 app.add_middleware(
@@ -45,7 +58,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include all routers
+app.include_router(hello.router, tags=["general"])
 app.include_router(endorsement.router, prefix="/api", tags=["endorsement"])
+app.include_router(annotator.router, prefix="/api", tags=["annotation"])
+app.include_router(discharge.router, prefix="/api", tags=["discharge"])
+app.include_router(document_routes.router, prefix="/api", tags=["documents"])
+app.include_router(generator_routes.router, prefix="/api", tags=["generation"])
+app.include_router(nationality.router, prefix="/api", tags=["nationality"])
+app.include_router(packet.router, prefix="/api", tags=["packets"])
 
 # Serve uploaded and endorsed files
 @app.get("/uploads/{filename}")
