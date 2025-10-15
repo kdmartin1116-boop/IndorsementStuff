@@ -26,7 +26,7 @@ def show_project_functionality():
         "Bill Processing": [
             "💰 /api/endorse-bill/ - Advanced bill endorsement with PDF processing",
             "🔍 /scan-contract - Contract analysis and scanning", 
-            "📜 /parse-sovereign-instrument - Sovereign document parsing",
+            "📜 /parse-negotiable-instrument - Negotiable instrument parsing and classification",
             "⚖️ /generate-remedy - Legal remedy generation"
         ],
         "Document Management": [
@@ -119,7 +119,7 @@ def show_project_functionality():
     business_features = [
         "💰 Bill of Exchange endorsement processing",
         "⚖️ Legal remedy compilation and generation", 
-        "🏛️ Sovereign financial instrument handling",
+        "� Negotiable instrument and commercial paper handling",
         "📋 UCC3 endorsement compliance",
         "🔍 Document parsing and classification",
         "📊 Transaction logging and audit trails",

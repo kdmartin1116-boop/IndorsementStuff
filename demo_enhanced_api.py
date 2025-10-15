@@ -48,7 +48,7 @@ def demonstrate_enhanced_features():
         "Nationality Processing": "/api/api/wizard/nationality",
         "Packet Management": "/api/api/wizard/packet",
         "Contract Scanning": "/scan-contract",
-        "Sovereign Instrument Parsing": "/parse-sovereign-instrument",
+        "Negotiable Instrument Parsing": "/parse-negotiable-instrument",
         "Interactive Positioner": "/positioner",
         "File Upload": "/upload"
     }

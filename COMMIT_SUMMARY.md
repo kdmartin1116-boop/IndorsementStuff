@@ -54,7 +54,7 @@
 #### **Available Endpoints:**
 - **General**: `/`, `/api/hello`, `/docs`
 - **Endorsement**: `/api/endorse-bill/`
-- **Document Processing**: `/upload`, `/scan-contract`, `/parse-sovereign-instrument`
+- **Document Processing**: `/upload`, `/scan-contract`, `/parse-negotiable-instrument`
 - **Wizards**: `/api/api/wizard/annotate`, `/api/api/wizard/discharge`, `/api/api/wizard/nationality`, `/api/api/wizard/packet`
 - **Tools**: `/positioner`, `/uploads/{filename}`
 

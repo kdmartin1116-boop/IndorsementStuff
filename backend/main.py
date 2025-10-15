@@ -30,7 +30,7 @@ from packages.LocalAgentCore.InstrumentAnnotator.stamper import (
     attach_endorsement_to_pdf_function,  # noqa: E402
 )
 from packages.LocalAgentCore.InstrumentClassifier.classifier import (
-    parse_sovereign_instrument,  # noqa: E402
+    parse_negotiable_instrument,  # noqa: E402
 )
 from packages.LocalAgentCore.RemedyCompiler.engine import (
     apply_endorsement,
@@ -44,8 +44,8 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 config = Config()
 app = FastAPI(
-    title="Enhanced Endorsement API",
-    description="Comprehensive API for sovereign financial instruments and bill discharge processes",
+    title="Negotiable Instrument Processing API",
+    description="Professional API for bill of exchange endorsement, negotiable instrument processing, and commercial paper discharge",
     version="2.0.0",
 )
 
@@ -197,14 +197,14 @@ def scan_contract_endpoint(contract: UploadFile = File(...)):
     return {"output": "clausescanner.sh not found"}
 
 
-@app.post("/parse-sovereign-instrument")
-def parse_sovereign_instrument_endpoint(document: UploadFile = File(...)):
+@app.post("/parse-negotiable-instrument")
+def parse_negotiable_instrument_endpoint(document: UploadFile = File(...)):
     if not document:
         raise HTTPException(status_code=400, detail="No document part")
     if document.filename == "":
         raise HTTPException(status_code=400, detail="No selected file")
 
-    unique_filename = str(uuid.uuid4()) + "_sovereign_doc.pdf"
+    unique_filename = str(uuid.uuid4()) + "_negotiable_doc.pdf"
     filepath = os.path.join(UPLOAD_FOLDER, unique_filename)
     with open(filepath, "wb") as buffer:
         buffer.write(document.file.read())
@@ -213,7 +213,7 @@ def parse_sovereign_instrument_endpoint(document: UploadFile = File(...)):
         with open(filepath, "r", encoding="utf-8") as f:
             document_content = f.read()
 
-        results = parse_sovereign_instrument(document_content)
+        results = parse_negotiable_instrument(document_content)
         return results
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -13,7 +13,7 @@ from packages.EndorserKit.utils import load_yaml_config
 router = APIRouter()
 
 # --- CONFIGURATION ---
-SOVEREIGN_OVERLAY_CONFIG = "config/sovereign_overlay.yaml"
+ENDORSEMENT_CONFIG_FILE = "config/endorsement_rules.yaml"
 UPLOAD_DIR = "uploads"
 KEY_FILE = "private_key.pem"
 
@@ -31,6 +31,12 @@ def get_private_key():
 
 @router.post("/endorse-bill/")
 async def endorse_bill(file: UploadFile = File(...)):
+    """
+    Endorse a bill of exchange by analyzing it and applying appropriate endorsements.
+    
+    This endpoint processes uploaded bills of exchange or negotiable instruments
+    and applies proper endorsements based on configured commercial paper rules.
+    """
     private_key_pem = get_private_key()
     if not private_key_pem:
         raise HTTPException(
@@ -55,15 +61,15 @@ async def endorse_bill(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail=bill_data["error"])
 
         # 2. Load endorsement rules
-        overlay_config = load_yaml_config(SOVEREIGN_OVERLAY_CONFIG)
-        sovereign_endorsements = overlay_config.get("sovereign_endorsements", [])
+        endorsement_config = load_yaml_config(ENDORSEMENT_CONFIG_FILE)
+        endorsement_rules = endorsement_config.get("endorsement_rules", [])
 
-        if not sovereign_endorsements:
+        if not endorsement_rules:
             return {"message": "Bill processed, but no applicable endorsements found in config."}
 
         # 3. Process and attach endorsements
         endorsed_files = []
-        for endorsement_type in sovereign_endorsements:
+        for endorsement_type in endorsement_rules:
             trigger = endorsement_type.get("trigger", "Unknown")
             
             endorsement_text = f"{trigger}: {endorsement_type.get('meaning', '')}"

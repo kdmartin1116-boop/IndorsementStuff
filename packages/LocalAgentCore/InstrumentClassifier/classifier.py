@@ -1,6 +1,6 @@
 import re
 
-def parse_sovereign_instrument(document_text):
+def parse_negotiable_instrument(document_text):
     results = []
     text = document_text.lower()
 
@@ -8,42 +8,42 @@ def parse_sovereign_instrument(document_text):
         "treasury bonds / notes": {
             "keywords": ["treasury bond", "treasury note", "t-bond", "t-note"],
             "financial_role": "Long-term debt instruments",
-            "sovereign_implication": "Backed by full faith and credit of U.S.",
+            "government_backing": "Backed by full faith and credit of U.S.",
             "issuer": "U.S. Treasury",
             "authority": "Act of Congress"
         },
         "federal reserve notes": {
             "keywords": ["federal reserve note", "dollar", "currency"],
             "financial_role": "Fiat currency",
-            "sovereign_implication": "Legal tender, central bank issued",
+            "legal_status": "Legal tender, central bank issued",
             "issuer": "Federal Reserve",
             "authority": "Central Bank Issued"
         },
         "gold/silver certificates": {
             "keywords": ["gold certificate", "silver certificate"],
             "financial_role": "Asset-backed currency (historical)",
-            "sovereign_implication": "Legacy instruments with traceable backing",
+            "legal_status": "Legacy instruments with asset backing",
             "issuer": "U.S. Treasury",
             "authority": "Act of Congress"
         },
         "certificates of deposit": {
             "keywords": ["certificate of deposit", "cd"],
-            "financial_role": "Short-term sovereign debt",
-            "sovereign_implication": "Issued by federal entities",
+            "financial_role": "Short-term government debt",
+            "legal_status": "Issued by federal entities",
             "issuer": "Federal Entity", # More specific identification needed
             "authority": "Act of Congress"
         },
         "checks / drafts / bills": {
             "keywords": ["check", "draft", "bill of exchange"],
-            "financial_role": "Transactional instruments",
-            "sovereign_implication": "Authorized movement of federal funds",
+            "financial_role": "Negotiable instruments",
+            "legal_status": "Authorized commercial paper",
             "issuer": "Varies (Drawer)",
-            "authority": "Authorized by law"
+            "authority": "Commercial law"
         },
         "canceled u.s. stamps": {
             "keywords": ["canceled stamp", "u.s. stamp"],
             "financial_role": "Historical value tokens",
-            "sovereign_implication": "Traceable issuance and cancellation",
+            "legal_status": "Traceable issuance and cancellation",
             "issuer": "U.S. Postal Service",
             "authority": "Act of Congress"
         }
@@ -63,7 +63,7 @@ def parse_sovereign_instrument(document_text):
                 results.append({
                     "instrument_type": instrument_name,
                     "financial_role": data["financial_role"],
-                    "sovereign_implication": data["sovereign_implication"],
+                    "legal_status": data["legal_status"],
                     "issuer": data["issuer"],
                     "authority": data["authority"],
                     "status": status,
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     sample_doc3 = "A canceled U.S. stamp from 1900."
     sample_doc4 = "This is a forged check."
 
-    print(parse_sovereign_instrument(sample_doc1))
-    print(parse_sovereign_instrument(sample_doc2))
-    print(parse_sovereign_instrument(sample_doc3))
-    print(parse_sovereign_instrument(sample_doc4))
+    print(parse_negotiable_instrument(sample_doc1))
+    print(parse_negotiable_instrument(sample_doc2))
+    print(parse_negotiable_instrument(sample_doc3))
+    print(parse_negotiable_instrument(sample_doc4))
