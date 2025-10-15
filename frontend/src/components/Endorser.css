@@ -1,0 +1,84 @@
+.endorser-container {
+    padding: 20px;
+}
+
+.endorser-form {
+    margin-bottom: 20px;
+}
+
+.file-input-group {
+    margin-bottom: 10px;
+}
+
+.file-input-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.file-input {
+    margin-bottom: 10px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.processing-message {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+    padding: 10px;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.response-container {
+    padding: 15px;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.response-header {
+    color: #155724;
+    margin-top: 0;
+}
+
+.file-list {
+    margin: 10px 0;
+}
+
+.file-list-item {
+    margin-bottom: 8px;
+}
+
+.file-link {
+    color: #0066cc;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+.file-link-tip {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+}

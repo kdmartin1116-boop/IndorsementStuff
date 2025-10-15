@@ -1,0 +1,35 @@
+# Ignore build outputs
+dist/
+build/
+coverage/
+
+# Ignore dependencies
+node_modules/
+
+# Ignore generated files
+*.min.js
+*.min.css
+
+# Ignore logs
+*.log
+
+# Ignore environment files
+.env
+.env.*
+
+# Ignore editor files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore specific files that shouldn't be formatted
+CHANGELOG.md
+LICENSE

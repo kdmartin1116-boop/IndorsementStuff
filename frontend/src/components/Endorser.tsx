@@ -1,138 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useEndorsement } from '../hooks/useEndorsement';
+import { API_BASE_URL } from '../apiConfig';
+import ErrorDisplay from './ErrorDisplay';
+import './Endorser.css';
 
 const Endorser: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
-    const [response, setResponse] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [isProcessing, setIsProcessing] = useState<boolean>(false);
+    const { response, error, isProcessing, uploadProgress, endorseBill, clearError, reset } = useEndorsement();
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files) {
-            setFile(event.target.files[0]);
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        if (acceptedFiles.length > 0) {
+            setFile(acceptedFiles[0]);
         }
-    };
+    }, []);
 
-    const handleSubmit = async () => {
-        if (!file) {
-            setError('Please select a file to endorse.');
-            return;
-        }
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: { 'application/pdf': ['.pdf'] },
+        multiple: false,
+    });
 
-        setIsProcessing(true);
-        setError(null);
-        setResponse(null);
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            console.log('Submitting endorsement request...');
-            const res = await fetch('/api/endorse-bill/', {
-                method: 'POST',
-                body: formData,
-            });
-
-            console.log('Response status:', res.status);
-
-            if (!res.ok) {
-                const errData = await res.json();
-                throw new Error(errData.detail || 'An error occurred during endorsement.');
-            }
-
-            const data = await res.json();
-            console.log('Endorsement response:', data);
-            setResponse(data);
-            setError(null);
-        } catch (err: any) {
-            console.error('Endorsement error:', err);
-            setError(err.message);
-            setResponse(null);
-        } finally {
-            setIsProcessing(false);
+    const handleSubmit = () => {
+        if (file) {
+            endorseBill(file);
         }
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="endorser-container">
             <h2>Endorse a Bill</h2>
-            <div style={{ marginBottom: '20px' }}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="file-input" style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
-                        Select PDF Bill to Endorse:
-                    </label>
-                    <input 
-                        id="file-input"
-                        type="file" 
-                        onChange={handleFileChange} 
-                        accept=".pdf"
-                        style={{ marginBottom: '10px' }}
-                    />
+            <div className="endorser-form">
+                <div {...getRootProps()} className={`dropzone ${isDragActive ? 'active' : ''}`}>
+                    <input {...getInputProps()} />
+                    {file ? (
+                        <p>{file.name}</p>
+                    ) : isDragActive ? (
+                        <p>Drop the file here ...</p>
+                    ) : (
+                        <p>Drag 'n' drop a PDF file here, or click to select a file</p>
+                    )}
                 </div>
-                <button 
-                    onClick={handleSubmit} 
-                    disabled={!file || isProcessing}
-                    style={{
-                        padding: '10px 20px',
-                        backgroundColor: isProcessing ? '#ccc' : '#007bff',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: isProcessing ? 'not-allowed' : 'pointer'
-                    }}
-                >
-                    {isProcessing ? 'Processing...' : 'Endorse Bill'}
+                <button onClick={handleSubmit} disabled={!file || isProcessing} className="submit-button">
+                    {isProcessing ? `Processing... ${uploadProgress}%` : 'Endorse Bill'}
                 </button>
             </div>
 
             {isProcessing && (
-                <div style={{ padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #dee2e6', borderRadius: '4px', marginBottom: '10px' }}>
-                    <p>⏳ Processing your bill endorsement...</p>
+                <div className="processing-message">
+                    <p>⏳ Processing your bill endorsement... {uploadProgress}%</p>
+                    <progress value={uploadProgress} max="100" />
                 </div>
             )}
 
-            {error && (
-                <div style={{ 
-                    color: 'red', 
-                    padding: '10px',
-                    backgroundColor: '#f8d7da',
-                    border: '1px solid #f5c6cb',
-                    borderRadius: '4px',
-                    marginBottom: '10px'
-                }}>
-                    <strong>Error:</strong> {error}
-                </div>
-            )}
+            <ErrorDisplay 
+                error={error} 
+                onRetry={() => file && handleSubmit()}
+                onDismiss={clearError}
+            />
 
             {response && (
-                <div style={{ 
-                    padding: '15px',
-                    backgroundColor: '#d4edda',
-                    border: '1px solid #c3e6cb',
-                    borderRadius: '4px',
-                    marginTop: '10px'
-                }}>
-                    <h3 style={{ color: '#155724', marginTop: 0 }}>✅ {response.message}</h3>
+                <div className="response-container">
+                    <h3 className="response-header">✅ {response.message}</h3>
                     {response.endorsed_files && response.endorsed_files.length > 0 && (
                         <div>
                             <p><strong>Endorsed Files Created:</strong></p>
-                            <ul style={{ margin: '10px 0' }}>
+                            <ul className="file-list">
                                 {response.endorsed_files.map((filePath: string, index: number) => {
                                     const fileName = filePath.split('/').pop() || filePath.split('\\').pop() || filePath;
                                     return (
-                                        <li key={index} style={{ marginBottom: '8px' }}>
-                                            <a 
-                                                href={`/${filePath}`} 
-                                                target="_blank" 
+                                        <li key={index} className="file-list-item">
+                                            <a
+                                                href={`${API_BASE_URL}/${filePath}`}
+                                                target="_blank"
                                                 rel="noopener noreferrer"
-                                                style={{
-                                                    color: '#0066cc',
-                                                    textDecoration: 'underline',
-                                                    fontSize: '14px'
-                                                }}
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    window.open(`http://127.0.0.1:8002/${filePath}`, '_blank');
-                                                }}
+                                                className="file-link"
                                             >
                                                 📄 {fileName}
                                             </a>
@@ -140,7 +82,7 @@ const Endorser: React.FC = () => {
                                     );
                                 })}
                             </ul>
-                            <p style={{ fontSize: '12px', color: '#666', fontStyle: 'italic' }}>
+                            <p className="file-link-tip">
                                 💡 Click the file links above to download your endorsed documents.
                             </p>
                         </div>

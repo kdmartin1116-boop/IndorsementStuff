@@ -1,0 +1,43 @@
+{
+  "name": "performance-optimization",
+  "description": "Performance optimization dependencies for the frontend application",
+  "devDependencies": {
+    "rollup-plugin-visualizer": "^5.11.0",
+    "vite-plugin-pwa": "^0.17.4",
+    "vite-bundle-analyzer": "^0.7.0",
+    "compression": "^1.7.4",
+    "terser": "^5.24.0",
+    "@vitejs/plugin-react": "^4.1.1",
+    "vite-plugin-windicss": "^1.9.3",
+    "rollup-plugin-gzip": "^3.1.0"
+  },
+  "dependencies": {
+    "react-window": "^1.8.8",
+    "react-virtualized-auto-sizer": "^1.0.20",
+    "intersection-observer": "^0.12.2",
+    "web-vitals": "^3.5.0"
+  },
+  "scripts": {
+    "analyze": "vite build --mode analyze && npx vite-bundle-analyzer",
+    "build:profile": "vite build --mode production --sourcemap",
+    "size-limit": "size-limit",
+    "lighthouse": "lighthouse http://localhost:3000 --output html --output-path ./reports/lighthouse.html"
+  },
+  "size-limit": [
+    {
+      "path": "dist/assets/*.js",
+      "limit": "200 KB",
+      "gzip": true
+    },
+    {
+      "path": "dist/assets/react-vendor-*.js", 
+      "limit": "150 KB",
+      "gzip": true
+    },
+    {
+      "path": "dist/assets/ui-components-*.js",
+      "limit": "100 KB", 
+      "gzip": true
+    }
+  ]
+}

@@ -1,7 +1,8 @@
 import { useState, ChangeEvent } from 'react';
+import { AppError, AppErrorHandler, ErrorCode } from '../utils/errorHandler';
+import ErrorDisplay from './ErrorDisplay';
 
-// Hardcoding KEYWORD_MAP for now, as there's no API to fetch it.
-// In a real application, this would ideally be fetched from the backend.
+// Hardcoded KEYWORD_MAP - in a real application, this would be fetched from the backend.
 const KEYWORD_MAP_FRONTEND: { [key: string]: string[] } = {
   "hidden_fee": ["convenience fee", "service charge", "processing fee", "undisclosed", "surcharge"],
   "misrepresentation": ["misrepresented", "misleading", "deceptive", "false statement", "inaccurate"],
@@ -13,7 +14,7 @@ function ContractScanner() {
   const [selectedTag, setSelectedTag] = useState<string>(Object.keys(KEYWORD_MAP_FRONTEND)[0]);
   const [scanResult, setScanResult] = useState<string[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AppError | null>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -27,11 +28,32 @@ function ContractScanner() {
 
   const handleScan = async () => {
     if (!selectedFile) {
-      alert('Please select a PDF file to scan.');
+      const validationError = AppErrorHandler.createError(
+        ErrorCode.VALIDATION_ERROR,
+        'Please select a PDF file to scan.'
+      );
+      setError(validationError);
       return;
     }
+    
     if (!selectedTag) {
-      alert('Please select a tag.');
+      const validationError = AppErrorHandler.createError(
+        ErrorCode.VALIDATION_ERROR,
+        'Please select a tag.'
+      );
+      setError(validationError);
+      return;
+    }
+
+    // Validate file
+    const fileValidationError = AppErrorHandler.validateFile(selectedFile, {
+      maxSize: 10 * 1024 * 1024, // 10MB
+      allowedTypes: ['application/pdf']
+    });
+
+    if (fileValidationError) {
+      setError(fileValidationError);
+      AppErrorHandler.logError(fileValidationError);
       return;
     }
 
@@ -49,23 +71,33 @@ function ContractScanner() {
         body: formData,
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Server error occurred.');
+        let errorData: any = {};
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          // Response is not JSON
+        }
+        
+        const apiError = AppErrorHandler.handleApiError(response, errorData);
+        setError(apiError);
+        AppErrorHandler.logError(apiError);
+        return;
       }
 
-      if (data.found_clauses) {
-        setScanResult(data.found_clauses);
-      } else {
-        setScanResult([]);
-      }
-    } catch (e: any) {
-      setError(e.message || 'Network error occurred.');
+      const data = await response.json();
+      setScanResult(data.found_clauses || []);
+      
+    } catch (networkError: any) {
+      const error = AppErrorHandler.handleNetworkError(networkError);
+      setError(error);
+      AppErrorHandler.logError(error);
     } finally {
       setLoading(false);
     }
   };
+
+  const clearError = () => setError(null);
 
   return (
     <div>
@@ -93,7 +125,11 @@ function ContractScanner() {
         {loading ? 'Scanning...' : 'Scan Contract'}
       </button>
 
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      <ErrorDisplay 
+        error={error} 
+        onRetry={handleScan}
+        onDismiss={clearError}
+      />
 
       {scanResult && scanResult.length > 0 && (
         <div style={{ marginTop: '20px' }}>

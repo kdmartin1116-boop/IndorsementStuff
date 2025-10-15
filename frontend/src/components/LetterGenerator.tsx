@@ -1,4 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
+import { AppError, AppErrorHandler, ErrorCode } from '../utils/errorHandler';
+import ErrorDisplay from './ErrorDisplay';
 
 type LetterType = 'tender' | 'ptp' | 'fcra';
 
@@ -31,12 +33,13 @@ function LetterGenerator() {
 
   const [generatedLetterContent, setGeneratedLetterContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AppError | null>(null);
 
   const handleGenerateLetter = async (endpoint: string, data: object) => {
     setLoading(true);
     setError(null);
     setGeneratedLetterContent('');
+    
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -45,23 +48,43 @@ function LetterGenerator() {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to generate letter due to server error.');
+        let errorData: any = {};
+        try {
+          errorData = await response.json();
+        } catch (e) {
+          // Response is not JSON
+        }
+        
+        const apiError = AppErrorHandler.handleApiError(response, errorData);
+        setError(apiError);
+        AppErrorHandler.logError(apiError);
+        return;
       }
 
+      const result = await response.json();
       if (result.letterContent) {
         setGeneratedLetterContent(result.letterContent);
       } else {
-        setError('Unexpected response from server.');
+        const error = AppErrorHandler.createError(
+          ErrorCode.API_ERROR,
+          'Server returned unexpected response format.',
+          JSON.stringify(result)
+        );
+        setError(error);
+        AppErrorHandler.logError(error);
       }
-    } catch (err: any) {
-      setError(err.message || 'Network error.');
+    } catch (networkError: any) {
+      const error = AppErrorHandler.handleNetworkError(networkError);
+      setError(error);
+      AppErrorHandler.logError(error);
     } finally {
       setLoading(false);
     }
   };
+
+  const clearError = () => setError(null);
 
   const renderTenderLetterForm = () => (
     <div>
@@ -164,7 +187,14 @@ function LetterGenerator() {
       {currentLetterType === 'fcra' && renderFCRADisputeForm()}
 
       {loading && <p>Generating letter...</p>}
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+      <ErrorDisplay 
+        error={error} 
+        onRetry={() => {
+          // Retry would depend on the current letter type and form data
+          // For now, just clear the error and let user retry manually
+        }}
+        onDismiss={clearError}
+      />
 
       {generatedLetterContent && (
         <div>

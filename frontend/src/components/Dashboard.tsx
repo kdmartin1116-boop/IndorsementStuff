@@ -1,14 +1,8 @@
-import { useState, ChangeEvent } from 'react';
+import React from 'react';
 
-interface BillData {
-  [key: string]: string;
-}
+interface DashboardProps {}
 
-function Dashboard() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [billData, setBillData] = useState<BillData | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+const Dashboard: React.FC<DashboardProps> = () => {
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
