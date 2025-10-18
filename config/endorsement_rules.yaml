@@ -1,0 +1,5 @@
+endorsement_rules:
+  - trigger: "For Deposit Only"
+    meaning: "This negotiable instrument is for deposit into the specified account only."
+    ink_color: "blue"
+    placement: "Front"

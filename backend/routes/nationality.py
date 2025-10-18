@@ -3,21 +3,8 @@ import sys
 
 from fastapi import APIRouter, Request
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "LocalAgentCore",
-            "NationalityReclaimer",
-            "logic",
-        )
-    )
-)
-
-from generate_affidavit import generate_affidavit  # noqa: E402
-from parse_nationality import parse_nationality  # noqa: E402
+from packages.LocalAgentCore.NationalityReclaimer.logic.generate_affidavit import generate_affidavit
+from packages.LocalAgentCore.NationalityReclaimer.logic.parse_nationality import parse_nationality
 
 router = APIRouter()
 

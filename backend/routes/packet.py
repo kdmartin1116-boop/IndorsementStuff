@@ -3,35 +3,10 @@ import sys
 
 from fastapi import APIRouter, Request
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "LocalAgentCore",
-            "DebtDischargeKit",
-            "logic",
-        )
-    )
-)
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "LocalAgentCore",
-            "InstrumentAnnotator",
-        )
-    )
-)
-
-
-from generate_discharge_instrument import generate_discharge_instrument
-from parse_layout import parse_layout
-from suggest_endorsements import suggest_endorsements
-from tag_zones import tag_zones
+from packages.LocalAgentCore.DebtDischargeKit.logic.generate_discharge_instrument import generate_discharge_instrument
+from packages.LocalAgentCore.InstrumentAnnotator.parse_layout import parse_layout
+from packages.LocalAgentCore.InstrumentAnnotator.suggest_endorsements import suggest_endorsements
+from packages.LocalAgentCore.InstrumentAnnotator.tag_zones import tag_zones
 
 router = APIRouter()
 

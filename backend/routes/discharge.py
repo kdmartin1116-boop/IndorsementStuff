@@ -3,20 +3,7 @@ import sys
 
 from fastapi import APIRouter, Request
 
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "LocalAgentCore",
-            "DebtDischargeKit",
-            "logic",
-        )
-    )
-)
-
-from parse_statement import parse_statement  # noqa: E402
+from packages.LocalAgentCore.DebtDischargeKit.logic.parse_statement import parse_statement
 
 router = APIRouter()
 
