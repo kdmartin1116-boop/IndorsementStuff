@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sovereign Legal Platform - Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 1rem;
+        }
+
+        .offline-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .offline-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ffd700, #ffed4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 1rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.75rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .network-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .network-status.online {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff4757;
+        }
+
+        .status-dot.online {
+            background: #2ed573;
+        }
+
+        .legal-knowledge {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .knowledge-header {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #ffd700;
+        }
+
+        .knowledge-list {
+            list-style: none;
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .knowledge-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 3px solid #ffd700;
+        }
+
+        .knowledge-title {
+            font-weight: 600;
+            color: #ffd700;
+            margin-bottom: 0.25rem;
+        }
+
+        .knowledge-desc {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .offline-container {
+                padding: 2rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+
+        .sync-status {
+            display: none;
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            text-align: center;
+        }
+
+        .sync-status.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📱</div>
+        <h1>Sovereign Legal Platform</h1>
+        <p class="subtitle">
+            You're currently offline, but many features are still available through our advanced caching system.
+        </p>
+
+        <div id="networkStatus" class="network-status">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">No internet connection</span>
+        </div>
+
+        <div id="syncStatus" class="sync-status">
+            🔄 Attempting to reconnect and sync your data...
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="feature-icon">⚖️</span>
+                <div class="feature-title">Legal Knowledge</div>
+                <div class="feature-desc">Access cached Cornell legal resources and sovereignty information</div>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">📄</span>
+                <div class="feature-title">Cached Documents</div>
+                <div class="feature-desc">View previously downloaded bills, affidavits, and legal forms</div>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🔄</span>
+                <div class="feature-title">Auto Sync</div>
+                <div class="feature-desc">Your actions are saved and will sync when connection returns</div>
+            </div>
+
+            <div class="feature-card">
+                <span class="feature-icon">🛡️</span>
+                <div class="feature-title">Secure Storage</div>
+                <div class="feature-desc">All cached data is encrypted and stored locally for privacy</div>
+            </div>
+        </div>
+
+        <div class="legal-knowledge">
+            <div class="knowledge-header">📚 Available Legal Knowledge (Offline)</div>
+            <ul class="knowledge-list">
+                <li class="knowledge-item">
+                    <div class="knowledge-title">UCC § 3-104 - Negotiable Instruments</div>
+                    <div class="knowledge-desc">Complete requirements for valid negotiable instruments and bill discharge processes</div>
+                </li>
+                <li class="knowledge-item">
+                    <div class="knowledge-title">Sovereignty Fundamentals</div>
+                    <div class="knowledge-desc">Core principles of individual sovereignty and private contract law</div>
+                </li>
+                <li class="knowledge-item">
+                    <div class="knowledge-title">Administrative Remedies</div>
+                    <div class="knowledge-desc">Step-by-step processes for administrative bill discharge and liability protection</div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="retryConnection()">
+                🔄 Try Again
+            </button>
+            <button class="btn btn-secondary" onclick="goToHome()">
+                🏠 Go Home
+            </button>
+            <button class="btn btn-secondary" onclick="viewCachedContent()">
+                📚 View Offline Content
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Network status monitoring
+        let isOnline = navigator.onLine;
+        let retryCount = 0;
+        const maxRetries = 5;
+        let retryTimeout;
+
+        function updateNetworkStatus() {
+            const networkStatus = document.getElementById('networkStatus');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const syncStatus = document.getElementById('syncStatus');
+
+            if (navigator.onLine) {
+                networkStatus.classList.add('online');
+                statusDot.classList.add('online');
+                statusText.textContent = 'Connection restored! Redirecting...';
+                syncStatus.classList.add('visible');
+                
+                // Attempt to reload after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                networkStatus.classList.remove('online');
+                statusDot.classList.remove('online');
+                statusText.textContent = 'No internet connection';
+                syncStatus.classList.remove('visible');
+            }
+        }
+
+        function retryConnection() {
+            if (retryCount >= maxRetries) {
+                alert('Maximum retry attempts reached. Please check your internet connection.');
+                return;
+            }
+
+            retryCount++;
+            const syncStatus = document.getElementById('syncStatus');
+            syncStatus.classList.add('visible');
+            syncStatus.innerHTML = `🔄 Retry attempt ${retryCount}/${maxRetries}...`;
+
+            // Clear existing timeout
+            if (retryTimeout) {
+                clearTimeout(retryTimeout);
+            }
+
+            // Attempt to fetch a simple resource
+            retryTimeout = setTimeout(() => {
+                fetch('/', { cache: 'no-cache' })
+                    .then(response => {
+                        if (response.ok) {
+                            syncStatus.innerHTML = '✅ Connection restored! Redirecting...';
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 1500);
+                        } else {
+                            throw new Error('No connection');
+                        }
+                    })
+                    .catch(() => {
+                        syncStatus.innerHTML = `❌ Retry ${retryCount} failed. Still offline.`;
+                        setTimeout(() => {
+                            syncStatus.classList.remove('visible');
+                        }, 2000);
+                    });
+            }, 1000);
+        }
+
+        function goToHome() {
+            try {
+                // Try to navigate to cached home page
+                window.location.href = '/';
+            } catch (error) {
+                // If navigation fails, show cached content
+                viewCachedContent();
+            }
+        }
+
+        function viewCachedContent() {
+            // Open a simple cached content viewer
+            const contentWindow = window.open('', '_blank');
+            contentWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Cached Legal Content</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 2rem; }
+                        .content-item { background: #f5f5f5; padding: 1rem; margin: 1rem 0; border-radius: 8px; }
+                        .content-title { font-weight: bold; color: #2c3e50; }
+                        .content-text { margin-top: 0.5rem; line-height: 1.5; }
+                    </style>
+                </head>
+                <body>
+                    <h1>🏛️ Cached Legal Resources</h1>
+                    <p>Available offline content from the Sovereign Legal Platform:</p>
+                    
+                    <div class="content-item">
+                        <div class="content-title">UCC § 3-104 - Negotiable Instrument Requirements</div>
+                        <div class="content-text">
+                            A negotiable instrument must be: (1) in writing and signed, (2) contain unconditional promise or order to pay, (3) state fixed amount of money, (4) payable on demand or definite time, (5) payable to order or bearer.
+                        </div>
+                    </div>
+                    
+                    <div class="content-item">
+                        <div class="content-title">Sovereign Individual Status - Core Principles</div>
+                        <div class="content-text">
+                            Foundation principles include: (1) natural birth rights, (2) private contract law supremacy, (3) commercial liability protection, (4) administrative remedy processes.
+                        </div>
+                    </div>
+                    
+                    <div class="content-item">
+                        <div class="content-title">Bill Discharge Process - Administrative Remedy</div>
+                        <div class="content-text">
+                            Administrative bill discharge follows: (1) proper acceptance for value, (2) conditional acceptance with questions, (3) discharge through setoff, (4) notice of administrative process.
+                        </div>
+                    </div>
+                    
+                    <p><em>This content is cached locally and available offline. Connect to the internet for the latest updates.</em></p>
+                    
+                    <button onclick="window.close()">Close</button>
+                </body>
+                </html>
+            `);
+        }
+
+        // Auto-retry when connection is restored
+        function handleOnline() {
+            updateNetworkStatus();
+            retryCount = 0; // Reset retry count
+        }
+
+        function handleOffline() {
+            updateNetworkStatus();
+        }
+
+        // Event listeners
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        // Initialize
+        updateNetworkStatus();
+
+        // Periodic connection check
+        setInterval(() => {
+            if (!navigator.onLine && retryCount < maxRetries) {
+                // Silently check for connection every 30 seconds
+                fetch('/', { cache: 'no-cache', mode: 'no-cors' })
+                    .then(() => {
+                        // If we get here, we're likely back online
+                        if (!isOnline) {
+                            handleOnline();
+                        }
+                    })
+                    .catch(() => {
+                        // Still offline, do nothing
+                    });
+            }
+        }, 30000);
+
+        // Service worker message handling
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data.type === 'NETWORK_STATUS_CHANGED') {
+                    updateNetworkStatus();
+                }
+            });
+        }
+
+        console.log('📱 Sovereign Legal Platform - Offline Mode Activated');
+    </script>
+</body>
+</html>

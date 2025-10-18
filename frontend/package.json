@@ -6,17 +6,32 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "cross-env NODE_ENV=production vite build",
+    "build:analyze": "npm run build && npx vite-bundle-analyzer dist/stats.html",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 --ignore-pattern \"dist/*\" && prettier --check .",
+    "lint:fix": "eslint . --ext js,jsx --fix && prettier --write .",
     "format": "prettier --write .",
     "preview": "vite preview",
+    "preview:prod": "cross-env NODE_ENV=production vite preview --port 4173",
     "test": "jest",
-    "generate:api": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output ./src/api --client axios"
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "generate:api": "openapi-typescript-codegen --input http://localhost:8000/openapi.json --output ./src/api --client axios",
+    "docker:build": "docker build -t sovereign-legal-platform .",
+    "docker:run": "docker run -p 80:80 sovereign-legal-platform",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=dist",
+    "health-check": "curl -f http://localhost/health || exit 1",
+    "start:prod": "serve -s dist -l 3000"
   },
   "dependencies": {
+    "lucide-react": "^0.545.0",
     "pdfjs-dist": "^5.4.149",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.3.8",
+    "recharts": "^3.2.1",
     "vite-plugin-static-copy": "^3.1.2"
   },
   "devDependencies": {
@@ -26,8 +41,9 @@
     "@testing-library/react": "^16.3.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "babel-jest": "^30.2.0",
+    "cross-env": "^10.1.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.34.1",
@@ -37,7 +53,10 @@
     "jest-environment-jsdom": "^30.2.0",
     "openapi-typescript-codegen": "^0.29.0",
     "prettier": "^3.6.2",
-    "vite": "^6.3.5"
+    "serve": "^14.2.5",
+    "terser": "^5.44.0",
+    "vite": "^6.3.5",
+    "vite-bundle-analyzer": "^1.2.3"
   },
   "description": "## **Disclaimer**",
   "main": "script.js",

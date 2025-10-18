@@ -1,0 +1,410 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: indorsement-backend
+  namespace: indorsement-production
+  labels:
+    app: indorsement-backend
+    version: v1
+    tier: backend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: indorsement-backend
+  template:
+    metadata:
+      labels:
+        app: indorsement-backend
+        version: v1
+        tier: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: indorsement-backend-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+      - name: backend
+        image: your-ecr-registry/indorsement-backend:{{IMAGE_TAG}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        - containerPort: 9090
+          name: metrics
+          protocol: TCP
+        env:
+        # Application Configuration
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        - name: API_VERSION
+          value: "v1"
+        
+        # Database Configuration
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: redis-url
+        
+        # Authentication
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: jwt-secret
+        - name: JWT_REFRESH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: jwt-refresh-secret
+        
+        # OAuth
+        - name: OAUTH_GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: google-client-id
+        - name: OAUTH_GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: google-client-secret
+        
+        # AWS Configuration
+        - name: AWS_REGION
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: aws-region
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: aws-access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: aws-secret-access-key
+        - name: S3_BUCKET
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: s3-bucket
+        
+        # Email Configuration
+        - name: SMTP_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: smtp-host
+        - name: SMTP_USER
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: smtp-user
+        - name: SMTP_PASS
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: smtp-pass
+        
+        # Analytics
+        - name: MIXPANEL_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: mixpanel-token
+        - name: GOOGLE_ANALYTICS_ID
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: google-analytics-id
+        
+        # AI Services
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: openai-api-key
+        - name: AZURE_COGNITIVE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: azure-cognitive-key
+        
+        # Monitoring
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: sentry-dsn
+        - name: NEW_RELIC_LICENSE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: new-relic-license-key
+        
+        # Feature Flags
+        - name: FEATURE_AI_RESEARCH
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: feature-ai-research
+        - name: FEATURE_MOBILE_SYNC
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: feature-mobile-sync
+        - name: FEATURE_ADVANCED_ANALYTICS
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: feature-advanced-analytics
+        
+        # Security
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: indorsement-secrets
+              key: encryption-key
+        - name: CORS_ORIGINS
+          valueFrom:
+            configMapKeyRef:
+              name: indorsement-config
+              key: cors-origins
+        
+        # Kubernetes-specific
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 30
+        
+        volumeMounts:
+        - name: app-logs
+          mountPath: /app/logs
+        - name: temp-storage
+          mountPath: /tmp
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        
+        # Security Context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          capabilities:
+            drop:
+            - ALL
+      
+      # Sidecar container for log shipping (optional)
+      - name: log-shipper
+        image: fluent/fluent-bit:2.0
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: app-logs
+          mountPath: /app/logs
+          readOnly: true
+        - name: fluent-bit-config
+          mountPath: /fluent-bit/etc
+      
+      volumes:
+      - name: app-logs
+        emptyDir: {}
+      - name: temp-storage
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: indorsement-config
+      - name: fluent-bit-config
+        configMap:
+          name: fluent-bit-config
+      
+      # Pod Disruption Budget support
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: indorsement-backend
+      
+      # Node Affinity (optional - for production workloads)
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - indorsement-backend
+              topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+      
+      # Tolerations for tainted nodes (optional)
+      tolerations:
+      - key: "indorsement.com/dedicated"
+        operator: "Equal"
+        value: "backend"
+        effect: "NoSchedule"
+      
+      # Image Pull Secrets
+      imagePullSecrets:
+      - name: ecr-registry-secret
+      
+      # Restart Policy
+      restartPolicy: Always
+      
+      # DNS Policy
+      dnsPolicy: ClusterFirst
+      
+      # Service Account
+      automountServiceAccountToken: false
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: indorsement-backend-pdb
+  namespace: indorsement-production
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: indorsement-backend
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: indorsement-backend-hpa
+  namespace: indorsement-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: indorsement-backend
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60

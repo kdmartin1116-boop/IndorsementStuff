@@ -1,0 +1,90 @@
+# ===========================================
+# DOCKER COMPOSE PRODUCTION DEPLOYMENT
+# ===========================================
+
+version: '3.8'
+
+services:
+  # Frontend Application
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sovereign-legal-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_BASE_URL=https://api.sovereignlegal.com
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro
+    networks:
+      - sovereign-network
+    restart: unless-stopped
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`sovereignlegal.com`)"
+      - "traefik.http.routers.frontend.tls=true"
+      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+
+  # Backend API (placeholder - configure based on your backend)
+  backend:
+    image: sovereignlegal/backend:latest
+    container_name: sovereign-legal-backend
+    ports:
+      - "8002:8002"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    networks:
+      - sovereign-network
+    restart: unless-stopped
+
+  # Redis for caching
+  redis:
+    image: redis:alpine
+    container_name: sovereign-legal-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - sovereign-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  # Load Balancer / Reverse Proxy
+  traefik:
+    image: traefik:v2.9
+    container_name: sovereign-legal-traefik
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=admin@sovereignlegal.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    networks:
+      - sovereign-network
+    restart: unless-stopped
+
+networks:
+  sovereign-network:
+    driver: bridge
+
+volumes:
+  redis_data:
+    driver: local

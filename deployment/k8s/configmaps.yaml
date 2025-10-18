@@ -1,0 +1,290 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: indorsement-config
+  namespace: indorsement-production
+  labels:
+    app: indorsement
+    tier: config
+data:
+  # Application Configuration
+  api-version: "v1"
+  app-name: "Indorsement Platform"
+  app-url: "https://app.indorsement.com"
+  api-url: "https://api.indorsement.com"
+  
+  # AWS Configuration
+  aws-region: "us-east-1"
+  s3-bucket: "indorsement-documents-prod"
+  cloudfront-url: "https://cdn.indorsement.com"
+  
+  # Email Configuration
+  smtp-host: "smtp.sendgrid.net"
+  smtp-port: "587"
+  smtp-from: "noreply@indorsement.com"
+  smtp-from-name: "Indorsement Platform"
+  
+  # Analytics Configuration
+  google-analytics-id: "GA4-MEASUREMENT-ID"
+  analytics-enabled: "true"
+  
+  # Performance Configuration
+  rate-limit-window-ms: "900000"
+  rate-limit-max-requests: "1000"
+  
+  # Security Configuration
+  cors-origins: "https://app.indorsement.com,https://admin.indorsement.com,https://mobile.indorsement.com"
+  helmet-enabled: "true"
+  
+  # Feature Flags
+  feature-ai-research: "true"
+  feature-mobile-sync: "true"
+  feature-advanced-analytics: "true"
+  feature-document-automation: "true"
+  feature-enterprise-sso: "true"
+  feature-real-time-collaboration: "true"
+  
+  # Cache Configuration
+  cache-enabled: "true"
+  cache-ttl-default: "3600"
+  cache-ttl-user-session: "86400"
+  cache-ttl-static-data: "604800"
+  
+  # Logging Configuration
+  log-level: "info"
+  log-format: "json"
+  log-enable-correlation-id: "true"
+  log-enable-request-logging: "true"
+  
+  # Health Check Configuration
+  health-check-path: "/health"
+  readiness-check-path: "/ready"
+  liveness-check-path: "/live"
+  
+  # Metrics Configuration
+  prometheus-enabled: "true"
+  prometheus-port: "9090"
+  prometheus-path: "/metrics"
+  
+  # Compliance Configuration
+  gdpr-enabled: "true"
+  hipaa-enabled: "true"
+  sox-enabled: "true"
+  data-retention-days: "2555"
+  log-retention-days: "90"
+  
+  # External Services
+  legal-api-timeout: "30000"
+  document-processing-enabled: "true"
+  pdf-processing-max-size-mb: "100"
+  
+  # Database Pool Configuration
+  db-pool-size: "20"
+  redis-pool-size: "10"
+  http-timeout: "30000"
+  
+  # Compression Configuration
+  gzip-enabled: "true"
+  gzip-level: "6"
+  static-cache-ttl: "31536000"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: indorsement-production
+  labels:
+    app: fluent-bit
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+
+    [INPUT]
+        Name              tail
+        Path              /app/logs/*.log
+        Parser            json
+        Tag               app.logs
+        Refresh_Interval  5
+        Mem_Buf_Limit     50MB
+
+    [OUTPUT]
+        Name  cloudwatch_logs
+        Match app.logs
+        region us-east-1
+        log_group_name /indorsement/production/app
+        log_stream_prefix app-
+        auto_create_group On
+
+  parsers.conf: |
+    [PARSER]
+        Name        json
+        Format      json
+        Time_Key    timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: indorsement-production
+  labels:
+    app: nginx
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+        
+        # Logging
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                       '$status $body_bytes_sent "$http_referer" '
+                       '"$http_user_agent" "$http_x_forwarded_for"';
+        
+        access_log /var/log/nginx/access.log main;
+        error_log /var/log/nginx/error.log warn;
+        
+        # Performance
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        
+        # Gzip Compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 10240;
+        gzip_proxied expired no-cache no-store private must-revalidate auth;
+        gzip_types
+            text/plain
+            text/css
+            text/xml
+            text/javascript
+            application/x-javascript
+            application/xml+rss
+            application/javascript
+            application/json;
+        
+        # Rate Limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=login:10m rate=1r/s;
+        
+        # Security Headers
+        add_header X-Frame-Options DENY;
+        add_header X-Content-Type-Options nosniff;
+        add_header X-XSS-Protection "1; mode=block";
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' wss: https:; media-src 'self' https:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self';" always;
+        
+        upstream backend {
+            least_conn;
+            server indorsement-backend-service:80 max_fails=3 fail_timeout=30s;
+            keepalive 32;
+        }
+        
+        server {
+            listen 80;
+            server_name api.indorsement.com;
+            return 301 https://$server_name$request_uri;
+        }
+        
+        server {
+            listen 443 ssl http2;
+            server_name api.indorsement.com;
+            
+            # SSL Configuration
+            ssl_certificate /etc/ssl/certs/tls.crt;
+            ssl_certificate_key /etc/ssl/private/tls.key;
+            ssl_session_timeout 1d;
+            ssl_session_cache shared:SSL:50m;
+            ssl_session_tickets off;
+            
+            # Modern configuration
+            ssl_protocols TLSv1.2 TLSv1.3;
+            ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+            ssl_prefer_server_ciphers off;
+            
+            # HSTS
+            add_header Strict-Transport-Security "max-age=63072000" always;
+            
+            # API Routes
+            location /api/ {
+                limit_req zone=api burst=20 nodelay;
+                
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_cache_bypass $http_upgrade;
+                
+                # Timeouts
+                proxy_connect_timeout 30s;
+                proxy_send_timeout 30s;
+                proxy_read_timeout 30s;
+            }
+            
+            # Authentication Routes (stricter rate limiting)
+            location ~ ^/api/v1/auth/(login|register|reset-password) {
+                limit_req zone=login burst=5 nodelay;
+                
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+            
+            # WebSocket Support
+            location /ws {
+                proxy_pass http://backend;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_read_timeout 86400;
+            }
+            
+            # Health Checks
+            location /health {
+                proxy_pass http://backend;
+                access_log off;
+            }
+            
+            # Metrics (internal only)
+            location /metrics {
+                allow 10.0.0.0/8;
+                allow 172.16.0.0/12;
+                allow 192.168.0.0/16;
+                deny all;
+                proxy_pass http://backend;
+            }
+            
+            # Static files (if served by backend)
+            location /static/ {
+                proxy_pass http://backend;
+                expires 1y;
+                add_header Cache-Control "public, immutable";
+            }
+        }
+    }

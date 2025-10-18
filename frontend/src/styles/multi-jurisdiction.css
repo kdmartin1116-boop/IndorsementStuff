@@ -1,0 +1,1061 @@
+/* Multi-Jurisdiction Support Styles */
+
+.multi-jurisdiction {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  min-height: 100vh;
+}
+
+/* Header */
+.jurisdiction-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+}
+
+.jurisdiction-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.jurisdiction-header p {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.jurisdiction-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  line-height: 1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+/* Overview Cards */
+.overview-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.overview-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card-icon.jurisdictions { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.card-icon.frameworks { background: linear-gradient(135deg, #10b981, #059669); }
+.card-icon.cross-border { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.card-icon.documents { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+.card-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.25rem 0;
+}
+
+.card-content p {
+  color: #64748b;
+  margin: 0 0 0.5rem 0;
+}
+
+.card-detail {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+/* Jurisdiction Tabs */
+.jurisdiction-tabs {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.tab-nav {
+  display: flex;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+  background: #e2e8f0;
+  color: #374151;
+}
+
+.tab-button.active {
+  background: white;
+  color: #0ea5e9;
+  border-bottom-color: #0ea5e9;
+}
+
+.tab-content {
+  padding: 2rem;
+}
+
+/* Overview Content */
+.overview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.overview-section h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 1rem 0;
+}
+
+.coverage-map {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.region-coverage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.region-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.region-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.region-header h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+}
+
+.region-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.region-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-metric {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.detail-metric span:first-child {
+  color: #6b7280;
+}
+
+.detail-metric span:last-child {
+  font-weight: 500;
+  color: #374151;
+}
+
+.region-flags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.flag-emoji {
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* Integration Status */
+.integration-status {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.status-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-bar {
+  height: 20px;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.chart-item.full .chart-bar { background: #10b981; }
+.chart-item.partial .chart-bar { background: #f59e0b; }
+.chart-item.limited .chart-bar { background: #ef4444; }
+
+.chart-item span {
+  font-size: 0.875rem;
+  color: #374151;
+  font-weight: 500;
+  min-width: 200px;
+}
+
+/* Jurisdictions Content */
+.jurisdictions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.jurisdictions-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.search-filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 0.75rem;
+  color: #6b7280;
+}
+
+.search-box input {
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+  width: 250px;
+}
+
+.region-filter {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.jurisdictions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.jurisdiction-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.jurisdiction-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.jurisdiction-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.jurisdiction-flag {
+  font-size: 2rem;
+}
+
+.jurisdiction-info {
+  flex: 1;
+}
+
+.jurisdiction-info h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.25rem 0;
+}
+
+.jurisdiction-info p {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.cornell-badge {
+  width: 24px;
+  height: 24px;
+}
+
+.jurisdiction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.detail-row span:first-child {
+  color: #6b7280;
+}
+
+.legal-system {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #374151;
+  font-weight: 500;
+}
+
+.compliance-level {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.jurisdiction-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #374151;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.action-btn.primary {
+  background: #0ea5e9;
+  color: white;
+  border-color: #0ea5e9;
+}
+
+/* Frameworks Content */
+.frameworks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.frameworks-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.add-framework-btn,
+.add-rule-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-framework-btn:hover,
+.add-rule-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+}
+
+.frameworks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.framework-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.framework-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.framework-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.framework-info h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.framework-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.framework-jurisdiction {
+  color: #0ea5e9;
+  font-weight: 500;
+}
+
+.framework-category {
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.framework-description {
+  margin-bottom: 1.5rem;
+}
+
+.framework-description p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.framework-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.framework-section h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cornell-link {
+  color: #0ea5e9;
+  text-decoration: none;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 0.875rem;
+}
+
+.cornell-link:hover {
+  text-decoration: underline;
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.requirements-list li {
+  padding: 0.25rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.requirements-list li:before {
+  content: "•";
+  color: #0ea5e9;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.related-frameworks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.related-tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.related-tag.harmonized {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.related-tag.conflict {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Cross-Border Content */
+.cross-border-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.cross-border-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.cross-border-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cross-border-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.cross-border-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.rule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.rule-flow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.jurisdiction-from,
+.jurisdiction-to {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-badge.suspended {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
+
+.status-badge.under-review {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.rule-details h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.75rem 0;
+}
+
+.rule-meta {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.rule-requirements {
+  margin-bottom: 1rem;
+}
+
+.rule-requirements h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.rule-requirements ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rule-requirements li {
+  padding: 0.25rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.rule-requirements li:before {
+  content: "✓";
+  color: #10b981;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.cornell-guidance {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.guidance-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.guidance-header span {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0369a1;
+}
+
+.cornell-guidance p {
+  color: #0369a1;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Compliance Content */
+.compliance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.compliance-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.compliance-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.upload-btn,
+.check-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-btn:hover,
+.check-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
+}
+
+.compliance-results {
+  margin-top: 2rem;
+}
+
+.compliance-results h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.compliance-results p {
+  color: #64748b;
+  margin: 0 0 2rem 0;
+}
+
+.compliance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.compliance-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.compliance-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.compliance-card .compliance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.jurisdiction-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.jurisdiction-flag {
+  font-size: 1.25rem;
+}
+
+.jurisdiction-name {
+  font-weight: 600;
+  color: #374151;
+}
+
+.compliance-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status-indicator.compliant {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-indicator.non-compliant {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-indicator.partial {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.confidence-score {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.compliance-section {
+  margin-bottom: 1rem;
+}
+
+.compliance-section:last-child {
+  margin-bottom: 0;
+}
+
+.compliance-section h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.issues-list,
+.recommendations-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.issue-item {
+  padding: 0.25rem 0;
+  color: #ef4444;
+  font-size: 0.875rem;
+}
+
+.issue-item:before {
+  content: "⚠";
+  margin-right: 0.5rem;
+}
+
+.recommendation-item {
+  padding: 0.25rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.recommendation-item:before {
+  content: "→";
+  color: #0ea5e9;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reference-link {
+  color: #0ea5e9;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+
+.reference-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .multi-jurisdiction {
+    padding: 1rem;
+  }
+
+  .jurisdiction-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .jurisdiction-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .overview-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .tab-nav {
+    flex-wrap: wrap;
+  }
+
+  .tab-button {
+    flex: none;
+    min-width: 120px;
+  }
+
+  .search-filters {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+
+  .jurisdictions-grid,
+  .compliance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rule-flow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .rule-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .compliance-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .region-coverage {
+    grid-template-columns: 1fr;
+  }
+
+  .jurisdiction-actions {
+    flex-wrap: wrap;
+  }
+
+  .compliance-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .compliance-status {
+    align-items: flex-start;
+  }
+}
